@@ -1,0 +1,56 @@
+.el-input__inner {
+    font-size: 15px !important;
+}
+
+.el-form-item__label {
+    font-weight: 500 !important;
+    line-height: 0 !important;
+}
+
+.el-form--label-top .el-form-item__label {
+    padding: 0px !important;
+}
+
+.edit {
+    margin-right: 20px;
+}
+
+.card_index {
+    margin: 0px 15px 15px 15px;
+}
+
+.card_footer_index {
+    background-color: #fff;
+}
+
+.card_footer_index button:nth-child(1){
+    margin-right: 10px;
+}
+
+.content_index {
+    margin-bottom: 25px;
+}
+
+.breadcrumb_index {
+    margin-left: 15px;
+}
+
+.button_index {
+    padding-left: 7.5px;
+}
+
+.button_index button:nth-child(1){
+    margin-right: 10px;
+}
+
+.el-pagination {
+    margin-top: 20px;
+}
+
+div .el-alert {
+    margin-bottom: 20px;
+}
+
+.el-alert .el-alert__description {
+    font-size: 14px !important;
+}

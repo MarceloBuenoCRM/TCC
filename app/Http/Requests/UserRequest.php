@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+class UserRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'cad_nome'     => ['required'],
+            'cad_email'    => ['required', "unique:users,cad_email,{$this->get('id')},id"]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'cad_nome.required'  => 'O campo Nome é um campo obrigatório.',
+            'cad_email.required' => 'O campo Email é um campo obrigatório.',
+            'cad_email.unique'   => 'Este E-mail já está cadastrado.'
+        ];
+    }
+}

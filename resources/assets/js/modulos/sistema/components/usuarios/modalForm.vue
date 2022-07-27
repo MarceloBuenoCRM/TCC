@@ -1,0 +1,206 @@
+<template>
+    <el-dialog :title="edit == true ? 'Editar Usuário' : 'Adicionar Usuário'" :visible.sync="dialogVisible"
+        :before-close="closeModalForm" append-to-body>
+        <div class="card card-gray-custom">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Usuário
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <el-alert v-if="error" :description="error" type="error" show-icon :closable="false">
+                </el-alert>
+
+                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm">
+                    <div class="row">
+                        <el-form-item label="Nome Completo" class="col-sm col-md-12" size="mini" prop="cad_nome">
+                            <el-input v-model="form.cad_nome" clearable></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="E-mail" class="col-sm col-md-4" :class="{'col-sm col-md-12': edit}"
+                            size="mini" prop="cad_email">
+                            <el-input v-model="form.cad_email" clearable></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Senha" class="col-sm col-md-4" size="mini" prop="cad_senha" v-if="!edit">
+                            <el-input type="password" v-model="form.cad_senha">
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Confirmar Senha" class="col-sm col-md-4" size="mini"
+                            prop="cad_confirma_senha" v-if="!edit">
+                            <el-input type="password" v-model="form.cad_confirma_senha">
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                </el-form>
+            </div>
+        </div>
+
+        <span slot="footer" class="dialog-footer">
+            <button type="button" class="btn btn-light btn-sm" @click="closeModalForm()">
+                Fechar
+            </button>
+            <button type="button" class="btn bg-gradient-success btn-sm" @click="submitForm('form')">
+                <i class="fas fa-save"></i>
+                Gravar
+            </button>
+        </span>
+    </el-dialog>
+</template>
+
+<script>
+    import modalMixins from '../../../../components/Mixins/modalMixins';
+
+    export default {
+        props: {
+            edit      : Boolean,
+            id_defeito: Number
+        },
+
+        data() {
+            var validatePass = (rule, value, callback) => {
+                if (value !== this.form.cad_senha) {
+                    callback(new Error('As senhas não confere.'));
+                } else {
+                    callback();
+                }
+            };
+
+            return {
+                activeCollpase: 'defeito',
+                form          : {
+                    cad_nome          : '',
+                    cad_email         : '',
+                    cad_senha         : '',
+                    cad_confirma_senha: ''
+                },
+                rules: {
+                    cad_nome: [{
+                        required: true,
+                        message : 'O campo Nome Completo é obrigatório.',
+                        trigger : "change",
+                    }],
+                    cad_email: [{
+                            required: true,
+                            message : 'O campo E-mail é obrigatório.',
+                            trigger : "change",
+                        },
+                        {
+                            type   : 'email',
+                            message: 'O campo não contém um e-mail válido.',
+                            trigger: "blur",
+                        }
+                    ],
+                    cad_senha: [{
+                            required: true,
+                            message : 'O campo Senha é obrigatório.',
+                            trigger : "change",
+                        },
+                        {
+                            min    : 8,
+                            message: 'Deve conter pelo menos 8 caracteres.',
+                            trigger: "blur",
+                        }
+                    ],
+                    cad_confirma_senha: [{
+                            required: true,
+                            message : 'O campo Confirmar Senha é obrigatório.',
+                            trigger : "change",
+                        },
+                        {
+                            validator: validatePass,
+                            trigger  : 'change'
+                        }
+                    ],
+                },
+                id_usuario: '',
+                error     : ''
+            }
+        },
+
+        mixins: [modalMixins],
+
+        methods: {
+            submitForm(form) {
+                let self = this;
+
+                self.$refs[form].validate((valid) => {
+                    if (valid) {
+                        self.error = '';
+
+                        if (self.edit == true) {
+                            axios.put('/sistema/usuario/' + self.id_usuario, self.form)
+                                .then(function () {
+                                    self.$notify({
+                                        title  : 'Sucesso!',
+                                        message: 'Registro editado com sucesso.',
+                                        type   : 'success'
+                                    });
+                                    self.$emit('loadData');
+                                    self.closeModal();
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    if (error.response.data.errors.cad_email) {
+                                        self.error = error.response.data.errors.cad_email[0];
+                                    }
+                                })
+                        } else {
+                            axios.post('/sistema/usuario', self.form)
+                                .then(function () {
+                                    self.$notify({
+                                        title  : 'Sucesso!',
+                                        message: 'Registro criado com sucesso.',
+                                        type   : 'success'
+                                    });
+                                    self.$emit('loadData');
+                                    self.closeModal();
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    if (error.response.data.errors.cad_email) {
+                                        self.error = error.response.data.errors.cad_email[0];
+                                    }
+                                })
+                        }
+                    } else {
+                        self.$notify({
+                            title  : 'Opsss!',
+                            message: 'Foram encontrados erros de validações no formulário.',
+                            type   : 'error'
+                        });
+                        return false;
+                    }
+                });
+            },
+
+            carregaDados(id_usuario) {
+                let self = this;
+
+                self.id_usuario = id_usuario;
+
+                axios.get('/sistema/usuario/' + id_usuario)
+                    .then(function (response) {
+                        self.form = response.data.data.data[0];
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            closeModalForm() {
+                let self = this;
+
+                self.error = '';
+                self.closeModal();
+            }
+        }
+    }
+
+</script>
