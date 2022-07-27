@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\User;
-
+use App\Models\UserModel;
 class UserService
 {
-    protected User $model;
+    protected UserModel $model;
 
-    public function __construct(User $model)
+    public function __construct(UserModel $model)
     {
         $this->model = $model;
     }

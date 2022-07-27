@@ -2,52 +2,50 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    public $timestamps = false;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'cad_nome',
+        'cad_email',
+        'cad_senha',
+        'cad_modo_escuro',
+        'cad_token_api',
+    ];
 
-    protected $table        = 'users';
-    protected $primaryKey   = 'id';
-    protected $orders       = ['id', 'cad_nome', 'cad_email'];
-    protected $guarded      = ['id'];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'cad_senha',
+        'remember_token',
+    ];
 
-    public function index($params)
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function getEmailForPasswordReset()
     {
-        $query = $this->selectRaw("id,
-                                cad_nome,
-                                cad_email")
-                        ->orderBy('id');
-
-        $query = $this->filter($query, $params);
-
-        return $query;
-    }
-
-    private function filter($query, array $params)
-    {
-        if (isset($params['cad_nome'])) {
-            $query->where('cad_nome', 'LIKE', '%' . $params['cad_nome'] . '%');
-        }
-
-        if (isset($params['cad_email'])) {
-            $query->where('cad_email', 'LIKE', '%' . $params['cad_email'] . '%');
-        }
-
-        return $query;
-    }
-
-    public function updateModoEscuro($id)
-    {
-        $user = $this->findOrFail(Auth::id());
-        $modo_escuro = !boolval($user->cad_modo_escuro);
-        $user->update(['cad_modo_escuro' => (int)$modo_escuro]);
-
-        return $modo_escuro;
+        return $this->cad_email;
     }
 }
