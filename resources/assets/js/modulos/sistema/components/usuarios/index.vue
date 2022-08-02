@@ -83,59 +83,58 @@
                                         <template slot-scope="scope">
                                             <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)"
                                                 title="Editar">
-                                                <i class="fas fa-edit fa-lg" style="color:#0085fa;"></i>
+                                                <i class="fas fa-edit" style="color:#0085fa;"></i>
                                             </a>
 
                                             <a href="#" @click.prevent="confirmDelete(scope.row.id)" title="Excluir">
-                                                <i class="fas fa-trash-alt fa-lg" style="color:#f00;"></i>
+                                                <i class="fas fa-trash-alt" style="color:#f00;"></i>
                                             </a>
                                         </template>
                                     </el-table-column>
                                 </el-table>
 
-                                <el-pagination @current-change="navigate" :current-page="currentPage"
-                                    layout="total, ->, prev, pager, next, jumper" :total="total">
-                                </el-pagination>
+                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page" :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
+                                </pagination>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
-        <modal-form ref="modalForm" :edit="edit" @loadData="loadData"></modal-form>
+        <modal-form ref="modalForm" :edit="edit" @loadData="submitForm"></modal-form>
     </div>
 </template>
 
 <script>
-    import modalForm from './modalForm';
+    import modalForm  from './modalForm';
+    import funcoes    from '../../../../components/mixins/funcoes';
+    import pagination from '../../../../components/partials/simplePagination.vue';
 
     export default {
         components: {
+            pagination,
             modalForm
         },
 
         data() {
             return {
                 form: {
-                    cad_nome: ''
+                    cad_nome: '',
+                    per_page: 5,
                 },
-                usuarios_list: [],
-                edit         : false,
-                page         : '',
-                url          : '',
-                total        : null,
-                currentPage  : null
+                url        : '',
+                usuarios   : [],
+                edit       : false,
+                next_page  : false,
+                prev_page  : false,
+                currentPage: null
             }
         },
 
-        computed: {
-            usuarios() {
-                return this.$store.state.usuarios;
-            },
-        },
+        mixins: [funcoes],
 
         mounted() {
-            this.loadData();
+            this.submitForm();
         },
 
         methods: {
@@ -149,30 +148,12 @@
                 self.$refs.modalForm.show('');
             },
 
-            confirmDelete(id_usuario) {
-                let self = this;
-
-                self.$confirm('Deseja excluir esse registro?', 'Atenção', {
-                    confirmButtonText: 'Sim',
-                    cancelButtonText : 'Cancelar',
-                    type             : 'warning',
-                    showClose        : true,
-                }).then(() => {
-                    self.delete(id_usuario)
-                }).catch(() => {
-                    self.$notify.info({
-                        title  : 'Atenção!',
-                        message: 'Exclusão cancelada.'
-                    });
-                });
-            },
-
             delete(id_usuario) {
                 let self = this;
 
                 axios.delete('/sistema/usuario/' + id_usuario)
                     .then(function () {
-                        self.loadData();
+                        self.submitForm();
                         self.$notify({
                             title  : 'Sucesso!',
                             message: 'Registro excluído com sucesso.',
@@ -190,70 +171,34 @@
             submitForm() {
                 let self = this;
 
-                self.page = '';
-                self.searchForm();
+                self.searchForm(null, self.form.per_page);
             },
 
-            loadData() {
-                let self = this;
-
-                self.searchForm(self.page);
-            },
-
-            navigate(page) {
-                let self = this;
-
-                self.page = page;
-                self.searchForm(page);
-            },
-
-            searchForm(page) {
+            searchForm(page, page_size) {
                 let self = this;
 
                 self.resetUsuarios();
-
-                self.url = "/sistema/usuario?"
-
-                Object.keys(self.form).forEach(function (key, i) {
-                    if (Object.values(self.form)[i]) {
-                        self.url += key + '=' + Object.values(self.form)[i] + '&'
-                    }
-                })
-
-                if (page != undefined && page != '') {
-                    self.url += 'page=' + page
-                }
+                self.form.per_page = page_size;
+                self.form.page     = page;
+                self.url           = self.mountUrl('/sistema/usuario?', self.form);
 
                 axios.get(self.url)
                     .then(function (response) {
-                        self.currentPage = response.data.data.current_page;
-                        self.total       = response.data.data.total;
-                        self.setUsuarios(response);
+                        self.currentPage   = response.data.data.current_page;
+                        self.form.per_page = response.data.data.per_page;
+                        self.next_page     = Boolean(response.data.data.next_page_url);
+                        self.prev_page     = Boolean(response.data.data.prev_page_url);
+                        self.usuarios      = self.mountDataTable(response.data.data.data);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-            setUsuarios(response) {
-                let self = this;
-
-                Object.keys(response.data.data.data).forEach((key, i) => self.usuarios_list[key] = Object.values(
-                    response.data.data.data)[i]);
-
-                self.$store.commit("LOADING_USUARIOS", self.usuarios_list);
-            },
-
             resetUsuarios() {
                 let self = this;
 
-                self.usuarios_list = [];
-            },
-
-            resetForm(){
-                let self = this;
-
-                self.$refs.form.resetFields();
+                self.usuarios = [];
             }
         }
     }

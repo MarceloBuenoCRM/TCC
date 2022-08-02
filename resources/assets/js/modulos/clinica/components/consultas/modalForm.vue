@@ -50,7 +50,7 @@
 </template>
 
 <script>
-    import modalMixins from '../../../../components/Mixins/modalMixins';
+    import modalMixins from '../../../../components/mixins/modalMixins';
 
     export default {
         props: {

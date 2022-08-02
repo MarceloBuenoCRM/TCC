@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $rows = $this->service->index($request->all())->paginate(10);
+        $rows = $this->service->index($request->all())->simplePaginate($request->per_page);
 
         $rows = $this->transformer->transform($rows);
 
@@ -35,7 +35,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $row = $this->service->show($id)->paginate(1);
+        $row = $this->service->show($id)->simplePaginate(1);
 
         $row = $this->transformer->transform($row);
 

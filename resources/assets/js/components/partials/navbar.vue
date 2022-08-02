@@ -8,11 +8,8 @@
 
             <li class="nav-item">
                 <div class="nav-link">
-                    <div class="custom-control custom-switch">
-                        <input v-model="dark_mode" type="checkbox" class="custom-control-input" id="customSwitch1"
-                            @change="updateDarkMode">
-                        <label class="custom-control-label" for="customSwitch1">Modo Escuro</label>
-                    </div>
+                    <el-switch v-model="dark_mode"  active-icon-class="far fa-moon" inactive-icon-class="far fa-sun fa-lg" @change="updateDarkMode">
+                    </el-switch>
                 </div>
             </li>
         </ul>

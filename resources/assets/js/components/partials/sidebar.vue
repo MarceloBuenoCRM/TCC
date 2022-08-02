@@ -13,7 +13,7 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-                    <li class="nav-header">MENUS</li>
+                    <li class="nav-header">MENU (Admin)</li>
                     <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'principal')}">
                         <a href="/principal" class="nav-link"
                             :class="{'active': isModuloMenu($route.name, 'principal')}">
@@ -38,19 +38,29 @@
 
                     <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'clinica')}">
                         <a href="/clinica" class="nav-link" :class="{'active': isModuloMenu($route.name, 'clinica')}">
-                            <i class="fas fa-clinic-medical"></i>
+                            <i class="fas fa-edit"></i>
                             <p>
-                                Clínica
+                                Cadastro
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
+                                <a href="/clinica/pacientes/index" class="nav-link"
+                                    :class="{'active': isMenu($route, 'clinica.pacientes.index')}">
+                                    <i class="fas fa-user-plus"></i>
+                                    <p>
+                                        Administrador(a)
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="/clinica/consultas/index" class="nav-link"
                                     :class="{'active': isMenu($route, 'clinica.consultas.index')}">
-                                    <i class="nav-icon fas fa-hand-holding-usd"></i>
+                                    <i class="fas fa-user-graduate"></i>
                                     <p>
-                                        Consultas
+                                        Aluno(a)
                                     </p>
                                 </a>
                             </li>
@@ -58,9 +68,9 @@
                             <li class="nav-item">
                                 <a href="/clinica/ficha_anamnese/index" class="nav-link"
                                     :class="{'active': isMenu($route, 'clinica.ficha_anamnese.index')}">
-                                    <i class="nav-icon fas fa-notes-medical"></i>
+                                    <i class="fas fa-chalkboard-teacher"></i>
                                     <p>
-                                        Ficha Anamnese
+                                        Professor(a)
                                     </p>
                                 </a>
                             </li>
@@ -68,21 +78,21 @@
                             <li class="nav-item">
                                 <a href="/clinica/pacientes/index" class="nav-link"
                                     :class="{'active': isMenu($route, 'clinica.pacientes.index')}">
-                                    <i class="nav-icon fas fa-users"></i>
+                                    <i class="fas fa-school"></i>
                                     <p>
-                                        Pacientes
+                                        Sala de Aula
                                     </p>
                                 </a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="nav-header">CONFIGURAÇÕES</li>
+                    <li class="nav-header">MENU (Professor)</li>
                     <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'sistema')}">
                         <a href="/sistema" class="nav-link" :class="{'active': isModuloMenu($route.name, 'sistema')}">
-                            <i class="fas fa-cog"></i>
+                            <i class="fas fa-edit"></i>
                             <p>
-                                Sistema
+                                Cadastro
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -90,13 +100,44 @@
                             <li class="nav-item">
                                 <a href="/sistema/usuarios/index" class="nav-link"
                                     :class="{'active': isMenu($route, 'sistema.usuarios.index')}">
-                                    <i class="nav-icon fas fa-users-cog"></i>
+                                    <i class="fas fa-spell-check"></i>
                                     <p>
-                                        Usuários
+                                        Aula
                                     </p>
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'sistema')}">
+                        <a href="/sistema" class="nav-link" :class="{'active': isModuloMenu($route.name, 'sistema')}">
+                            <i class="fas fa-file-invoice"></i>
+                            <p>
+                                Relatórios
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/sistema/usuarios/index" class="nav-link"
+                                    :class="{'active': isMenu($route, 'sistema.usuarios.index')}">
+                                    <i class="fas fa-id-card"></i>
+                                    <p>
+                                        Presença
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-header">MENU (Aluno)</li>
+                    <li class="nav-item">
+                        <a href="/sistema" class="nav-link" :class="{'active': isModuloMenu($route.name, 'sistema')}">
+                            <i class="fas fa-id-card"></i>
+                            <p>
+                                Presença
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
                     </li>
                 </ul>
             </nav>
