@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
-                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm">
+                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
                                             <el-form-item label="Nome" class="col-sm col-md-3" size="mini"
                                                 prop="cad_nome">
                                                 <el-input v-model="form.cad_nome" clearable></el-input>
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="card-footer card_footer_index">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <button type="button" class="btn btn-primary btn-sm" @click="submitForm()">
+                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexUsuario">
                                                 <i class="fas fa-search"></i>
                                                 Buscar
                                             </button>

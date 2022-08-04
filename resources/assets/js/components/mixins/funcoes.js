@@ -42,6 +42,26 @@ export default {
             let self = this;
 
             return self.$refs.form.resetFields();
+        },
+
+        lookupHandler(fields = [], separator = '-'){
+            let result = '';
+
+            fields.filter(field => ![null, ''].includes(field))
+                  .map((field, index) => {
+
+                result += (index > 0 ? ' ' + separator + ' ' : '') + field;
+            });
+
+            return result
+        },
+
+        hasError(campo){
+            return Object.keys(this.errors).includes(campo);
+        },
+
+        clearError(){
+            return this.errors = [];
         }
     }
 }

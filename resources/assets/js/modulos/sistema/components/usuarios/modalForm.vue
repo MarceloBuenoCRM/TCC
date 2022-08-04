@@ -13,18 +13,18 @@
                 </div>
             </div>
             <div class="card-body">
-                <el-alert v-if="error" :description="error" type="error" show-icon :closable="false">
-                </el-alert>
-
-                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm">
+                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
                         <el-form-item label="Nome Completo" class="col-sm col-md-12" size="mini" prop="cad_nome">
                             <el-input v-model="form.cad_nome" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item label="E-mail" class="col-sm col-md-4" :class="{'col-sm col-md-12': edit}"
+                        <el-form-item label="E-mail" class="col-sm col-md-4" :class="[{'col-sm col-md-12': edit}, {'is-error': hasError('cad_email')}]"
                             size="mini" prop="cad_email">
-                            <el-input v-model="form.cad_email" clearable></el-input>
+                            <el-input v-model="form.cad_email" clearable @blur="clearError"></el-input>
+                            <div class="el-form-item__error" v-if="hasError('cad_email')">
+                                {{errors['cad_email'][0]}}
+                            </div>
                         </el-form-item>
 
                         <el-form-item label="Senha" class="col-sm col-md-4" size="mini" prop="cad_senha" v-if="!edit">
@@ -46,7 +46,7 @@
             <button type="button" class="btn btn-light btn-sm" @click="closeModalForm()">
                 Fechar
             </button>
-            <button type="button" class="btn bg-gradient-success btn-sm" @click="submitForm('form')">
+            <button native-type="submit" class="btn bg-gradient-success btn-sm" form="formUsuarios">
                 <i class="fas fa-save"></i>
                 Gravar
             </button>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+    import funcoes     from '../../../../components/mixins/funcoes';
     import notify      from '../../../../components/mixins/notify';
     import modalMixins from '../../../../components/mixins/modalMixins';
 
@@ -89,7 +90,7 @@
                     cad_email: [{
                             required: true,
                             message : 'O campo E-mail é obrigatório.',
-                            trigger : "change",
+                            trigger : "blur",
                         },
                         {
                             type   : 'email',
@@ -119,11 +120,11 @@
                         }
                     ],
                 },
-                error: ''
+                errors: []
             }
         },
 
-        mixins: [modalMixins, notify],
+        mixins: [modalMixins, notify, funcoes],
 
         methods: {
             submitForm(form) {
@@ -135,7 +136,7 @@
                         return false;
                     }
 
-                    self.error = '';
+                    self.clearError();
 
                     if (self.edit == true) {
                         axios.put('/sistema/usuario/' + self.form.id, self.form)
@@ -145,10 +146,8 @@
                                 self.closeModal();
                             })
                             .catch(function (error) {
-                                console.log(error);
-                                if (error.response.data.errors.cad_email) {
-                                    self.error = error.response.data.errors.cad_email[0];
-                                }
+                                self.errors = error.response.data.errors ?? [];
+                                self.notifyErrorValidation();
                             })
                     } else {
                         axios.post('/sistema/usuario', self.form)
@@ -158,10 +157,8 @@
                                 self.closeModal();
                             })
                             .catch(function (error) {
-                                console.log(error);
-                                if (error.response.data.errors.cad_email) {
-                                    self.error = error.response.data.errors.cad_email[0];
-                                }
+                                self.errors = error.response.data.errors ?? [];
+                                self.notifyErrorValidation();
                             })
                     }
                 })
@@ -182,7 +179,7 @@
             closeModalForm() {
                 let self = this;
 
-                self.error = '';
+                self.clearError();
                 self.closeModal();
             }
         }
