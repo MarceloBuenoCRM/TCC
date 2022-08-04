@@ -9,6 +9,7 @@ use App\Services\UserService;
 use App\Transformers\UserTransformer;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -66,6 +67,12 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        $loggedId = Auth::id();
+
+        if((int)$loggedId == (int)$id){
+            return abort(500, 'Você não pode excluir seu usuário!');
+        }
+
         $this->service->delete($id);
 
         return response([], 204);

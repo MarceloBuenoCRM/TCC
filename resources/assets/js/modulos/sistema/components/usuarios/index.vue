@@ -108,6 +108,7 @@
 <script>
     import modalForm  from './modalForm';
     import funcoes    from '../../../../components/mixins/funcoes';
+    import notify     from '../../../../components/mixins/notify.js';
     import pagination from '../../../../components/partials/simplePagination.vue';
 
     export default {
@@ -131,7 +132,7 @@
             }
         },
 
-        mixins: [funcoes],
+        mixins: [funcoes, notify],
 
         mounted() {
             this.submitForm();
@@ -145,7 +146,7 @@
                     self.$refs.modalForm.carregaDados(id);
                 }
                 self.edit = edit;
-                self.$refs.modalForm.show('');
+                self.$refs.modalForm.show();
             },
 
             delete(id_usuario) {
@@ -154,17 +155,10 @@
                 axios.delete('/sistema/usuario/' + id_usuario)
                     .then(function () {
                         self.submitForm();
-                        self.$notify({
-                            title  : 'Sucesso!',
-                            message: 'Registro excluído com sucesso.',
-                            type   : 'success'
-                        });
+                        self.notifyDelete();
                     })
-                    .catch(() => {
-                        self.$notify.error({
-                            title  : 'Atenção!',
-                            message: 'Item não pode ser excluído.'
-                        });
+                    .catch((error) => {
+                        self.notifyError(error.response.data.message);
                     });
             },
 
@@ -185,7 +179,7 @@
                 axios.get(self.url)
                     .then(function (response) {
                         self.currentPage   = response.data.data.current_page;
-                        self.form.per_page = response.data.data.per_page;
+                        self.form.per_page = parseInt(response.data.data.per_page);
                         self.next_page     = Boolean(response.data.data.next_page_url);
                         self.prev_page     = Boolean(response.data.data.prev_page_url);
                         self.usuarios      = self.mountDataTable(response.data.data.data);

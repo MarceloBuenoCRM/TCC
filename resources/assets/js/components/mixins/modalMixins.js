@@ -35,6 +35,8 @@ export default {
                 self.$refs['form'].resetFields();
             }
 
+            self.next_page     = false;
+            self.prev_page     = false;
             self.dialogVisible = false;
         }
     }

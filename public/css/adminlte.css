@@ -55866,4 +55866,8 @@ a.text-muted:hover {
 .dark-mode .el-pagination button:disabled{
     background-color: #343a40;
 }
+
+.dark-mode .far.fa-sun{
+    color: #fff
+}
 /*# sourceMappingURL=adminlte.css.map */

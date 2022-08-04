@@ -55,12 +55,12 @@
 </template>
 
 <script>
+    import notify      from '../../../../components/mixins/notify';
     import modalMixins from '../../../../components/mixins/modalMixins';
 
     export default {
         props: {
-            edit      : Boolean,
-            id_defeito: Number
+            edit: Boolean,
         },
 
         data() {
@@ -119,71 +119,56 @@
                         }
                     ],
                 },
-                id_usuario: '',
-                error     : ''
+                error: ''
             }
         },
 
-        mixins: [modalMixins],
+        mixins: [modalMixins, notify],
 
         methods: {
             submitForm(form) {
                 let self = this;
 
                 self.$refs[form].validate((valid) => {
-                    if (valid) {
-                        self.error = '';
-
-                        if (self.edit == true) {
-                            axios.put('/sistema/usuario/' + self.id_usuario, self.form)
-                                .then(function () {
-                                    self.$notify({
-                                        title  : 'Sucesso!',
-                                        message: 'Registro editado com sucesso.',
-                                        type   : 'success'
-                                    });
-                                    self.$emit('loadData');
-                                    self.closeModal();
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    if (error.response.data.errors.cad_email) {
-                                        self.error = error.response.data.errors.cad_email[0];
-                                    }
-                                })
-                        } else {
-                            axios.post('/sistema/usuario', self.form)
-                                .then(function () {
-                                    self.$notify({
-                                        title  : 'Sucesso!',
-                                        message: 'Registro criado com sucesso.',
-                                        type   : 'success'
-                                    });
-                                    self.$emit('loadData');
-                                    self.closeModal();
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    if (error.response.data.errors.cad_email) {
-                                        self.error = error.response.data.errors.cad_email[0];
-                                    }
-                                })
-                        }
-                    } else {
-                        self.$notify({
-                            title  : 'Opsss!',
-                            message: 'Foram encontrados erros de validações no formulário.',
-                            type   : 'error'
-                        });
+                    if (!valid) {
+                        self.notifyErrorValidation();
                         return false;
                     }
-                });
+
+                    self.error = '';
+
+                    if (self.edit == true) {
+                        axios.put('/sistema/usuario/' + self.form.id, self.form)
+                            .then(function () {
+                                self.notifyEdit();
+                                self.$emit('loadData');
+                                self.closeModal();
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                                if (error.response.data.errors.cad_email) {
+                                    self.error = error.response.data.errors.cad_email[0];
+                                }
+                            })
+                    } else {
+                        axios.post('/sistema/usuario', self.form)
+                            .then(function () {
+                                self.notifyAdd();
+                                self.$emit('loadData');
+                                self.closeModal();
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                                if (error.response.data.errors.cad_email) {
+                                    self.error = error.response.data.errors.cad_email[0];
+                                }
+                            })
+                    }
+                })
             },
 
             carregaDados(id_usuario) {
                 let self = this;
-
-                self.id_usuario = id_usuario;
 
                 axios.get('/sistema/usuario/' + id_usuario)
                     .then(function (response) {

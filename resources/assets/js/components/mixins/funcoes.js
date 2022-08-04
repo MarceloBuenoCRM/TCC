@@ -1,7 +1,6 @@
 export default {
     methods: {
         mountUrl(url, form){
-
             Object.keys(form).forEach(function (key, i) {
                 if (Object.values(form)[i]) {
                     url += key + '=' + Object.values(form)[i] + '&'
@@ -22,25 +21,27 @@ export default {
         confirmDelete(id) {
             let self = this;
 
-            self.$confirm('Deseja excluir esse registro?', 'Atenção', {
-                confirmButtonText: 'Sim',
-                cancelButtonText : 'Cancelar',
+            self.$confirm(self.$t('message.exclusao_confirma'), self.$tc('message.atencao', 1), {
+                confirmButtonText: self.$t('message.sim'),
+                cancelButtonText : self.$t('message.cancelar'),
                 type             : 'warning',
                 showClose        : true,
             }).then(() => {
                 self.delete(id)
             }).catch(() => {
                 self.$notify.info({
-                    title  : 'Atenção!',
-                    message: 'Exclusão cancelada.'
+                    title  : self.$tc('message.atencao', 2),
+                    message: self.$t('message.exclusao_cancelada')
                 });
-            });
+            })
+
+            return true;
         },
 
         resetForm(){
             let self = this;
 
-            self.$refs.form.resetFields();
+            return self.$refs.form.resetFields();
         }
     }
 }

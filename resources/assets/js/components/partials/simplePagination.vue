@@ -1,6 +1,6 @@
 <template>
     <el-pagination @current-change="navigate" @size-change="sizeChange" :current-page="currentPage"
-        :page-sizes="['5', '10', '20', '50', '100']" :page-size="page_size" layout="->, sizes, slot"
+        :page-sizes="[5, 10, 20, 50, 100]" :page-size="page_size" layout="->, sizes, slot"
         background small>
         <template v-slot>
             <button :disabled="!prev_page" type="button" class="btn-prev" @click="navigate('prev')">
@@ -18,7 +18,7 @@
     export default {
         props:{
             currentPage: Number,
-            page_size  : String,
+            page_size  : Number,
             next_page  : Boolean,
             prev_page  : Boolean
         },
