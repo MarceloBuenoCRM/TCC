@@ -36,8 +36,8 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'clinica')}">
-                        <a href="/clinica" class="nav-link" :class="{'active': isModuloMenu($route.name, 'clinica')}">
+                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'admin')}">
+                        <a href="/admin" class="nav-link" :class="{'active': isModuloMenu($route.name, 'admin')}">
                             <i class="fas fa-edit"></i>
                             <p>
                                 Cadastro
@@ -46,8 +46,8 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="/clinica/pacientes/index" class="nav-link"
-                                    :class="{'active': isMenu($route, 'clinica.pacientes.index')}">
+                                <a href="/admin/admin/index" class="nav-link"
+                                    :class="{'active': isMenu($route, 'admin.admin.index')}">
                                     <i class="fas fa-user-plus"></i>
                                     <p>
                                         Administrador(a)
@@ -135,7 +135,6 @@
                             <i class="fas fa-id-card"></i>
                             <p>
                                 Presença
-                                <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                     </li>

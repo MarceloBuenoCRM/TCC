@@ -11,9 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-
-mix.js('resources/assets/js/modulos/sistema/app.js', 'public/js/sistema.js')
-    .js('resources/assets/js/modulos/principal/app.js', 'public/js/principal.js')
-    .js('resources/assets/js/modulos/clinica/app.js', 'public/js/clinica.js')
+ mix.js('resources/assets/js/modulos/principal/app.js', 'public/js/principal.js')
+    .js('resources/assets/js/modulos/admin/app.js', 'public/js/admin.js')
+    .js('resources/assets/js/modulos/professor/app.js', 'public/js/professor.js')
+    .js('resources/assets/js/modulos/aluno/app.js', 'public/js/aluno.js')
     .vue()
     .sass('resources/assets/sass/app.scss', 'public/css');

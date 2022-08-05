@@ -1,6 +1,5 @@
 <template>
-    <nav class="main-header navbar navbar-expand"
-        :class="{'navbar-dark': dark_mode == true, 'navbar-white navbar-light': dark_mode == false}">
+    <nav id="navbar" class="main-header navbar navbar-expand">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -94,8 +93,12 @@
 
                 if (self.dark_mode == 1) {
                     $('#body').addClass('dark-mode');
+                    $('#navbar').addClass('navbar-dark');
+                    $('#navbar').removeClass('navbar-white navbar-light')
                 } else {
                     $('#body').removeClass('dark-mode');
+                    $('#navbar').removeClass('navbar-dark');
+                    $('#navbar').addClass('navbar-white navbar-light')
                 }
             },
 

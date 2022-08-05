@@ -20,15 +20,21 @@ Route::group(['middleware' => ['auth']], function () {
         return view('modulos.principal');
     })->name('index');
 
-    Route::prefix('sistema')->name('sistema.')->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{vue?}', function () {
-            return view('modulos.sistema');
+            return view('modulos.admin');
         })->where(['vue' => '.*'])->name('index');
     });
 
-    Route::prefix('clinica')->name('clinica.')->group(function () {
+    Route::prefix('professor')->name('professor.')->group(function () {
         Route::get('/{vue?}', function () {
-            return view('modulos.clinica');
+            return view('modulos.professor');
+        })->where(['vue' => '.*'])->name('index');
+    });
+
+    Route::prefix('aluno')->name('aluno.')->group(function () {
+        Route::get('/{vue?}', function () {
+            return view('modulos.aluno');
         })->where(['vue' => '.*'])->name('index');
     });
 });
