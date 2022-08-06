@@ -39,7 +39,7 @@
     padding-left: 7.5px;
 }
 
-.button_index button:nth-child(1){
+.button_index button{
     margin-right: 10px;
 }
 

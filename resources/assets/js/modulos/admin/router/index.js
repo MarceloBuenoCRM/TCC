@@ -14,7 +14,7 @@ routes.forEach(function (route) {
     })
 });
 
-routesModule.push({path: '*', redirect: {name: 'index'}});
+routesModule.push({path: '*', redirect: {name: 'admin.admin.index'}});
 
 const router = new Router({
     mode: 'history',

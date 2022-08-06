@@ -39,4 +39,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 
+Route::fallback(function () {
+    return view('modulos.404error');
+});
+
 require __DIR__.'/auth.php';

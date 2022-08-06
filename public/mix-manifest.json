@@ -3,5 +3,6 @@
     "/js/admin.js": "/js/admin.js",
     "/js/professor.js": "/js/professor.js",
     "/js/aluno.js": "/js/aluno.js",
+    "/js/404error.js": "/js/404error.js",
     "/css/app.css": "/css/app.css"
 }

@@ -4,7 +4,7 @@
         <div class="card card-gray-custom">
             <div class="card-header">
                 <h3 class="card-title">
-                    Usuário
+                    {{$tc('message.usuario', 1)}}
                 </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -15,11 +15,11 @@
             <div class="card-body">
                 <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
-                        <el-form-item label="Nome Completo" class="col-sm col-md-12" size="mini" prop="cad_nome">
+                        <el-form-item :label="$tc('message.nome', 2)" class="col-sm-12 col-md-12" size="mini" prop="cad_nome">
                             <el-input v-model="form.cad_nome" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item label="E-mail" class="col-sm col-md-4" :class="[{'col-sm col-md-12': edit}, {'is-error': hasError('cad_email')}]"
+                        <el-form-item :label="$t('message.email')" class="col-sm-12 col-md-4" :class="[{'col-md-12': edit}, {'is-error': hasError('cad_email')}]"
                             size="mini" prop="cad_email">
                             <el-input v-model="form.cad_email" clearable @blur="clearError"></el-input>
                             <div class="el-form-item__error" v-if="hasError('cad_email')">
@@ -27,13 +27,12 @@
                             </div>
                         </el-form-item>
 
-                        <el-form-item label="Senha" class="col-sm col-md-4" size="mini" prop="cad_senha" v-if="!edit">
+                        <el-form-item :label="$tc('message.senha', 1)" class="col-sm-12 col-md-4" size="mini" prop="cad_senha" v-if="!edit">
                             <el-input type="password" v-model="form.cad_senha">
                             </el-input>
                         </el-form-item>
 
-                        <el-form-item label="Confirmar Senha" class="col-sm col-md-4" size="mini"
-                            prop="cad_confirma_senha" v-if="!edit">
+                        <el-form-item :label="$tc('message.senha', 2)" class="col-sm-12 col-md-4" size="mini" prop="cad_confirma_senha" v-if="!edit">
                             <el-input type="password" v-model="form.cad_confirma_senha">
                             </el-input>
                         </el-form-item>
@@ -44,11 +43,11 @@
 
         <span slot="footer" class="dialog-footer">
             <button type="button" class="btn btn-light btn-sm" @click="closeModalForm()">
-                Cancelar
+                {{$t('message.cancelar')}}
             </button>
-            <button native-type="submit" class="btn bg-gradient-success btn-sm" form="formUsuarios">
+            <button native-type="submit" class="btn btn-primary btn-sm" form="formUsuarios">
                 <i class="fas fa-save"></i>
-                Gravar
+                {{$t('message.gravar')}}
             </button>
         </span>
     </el-dialog>
