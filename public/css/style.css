@@ -47,10 +47,12 @@
     margin-top: 20px;
 }
 
-div .el-alert {
-    margin-bottom: 20px;
+.el-button,
+.el-message-box{
+    font-size: 0.875rem !important;
 }
 
-.el-alert .el-alert__description {
-    font-size: 14px !important;
+.el-button--primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
 }

@@ -55870,4 +55870,25 @@ a.text-muted:hover {
 .dark-mode .far.fa-sun{
     color: #fff
 }
+
+.dark-mode .el-message-box,
+.dark-mode .el-notification{
+    background-color: #343a40;
+}
+
+.dark-mode .el-message-box__message,
+.dark-mode .el-message-box__title,
+.dark-mode .el-notification__title,
+.dark-mode .el-notification__content {
+    color: #fff;
+}
+
+.dark-mode .el-message-box__btns button:first-child{
+    color: #000;
+}
+
+.dark-mode .el-message-box__btns button.el-button--primary{
+    background-color: #3f6791 !important;
+    border-color: #3f6791 !important;
+}
 /*# sourceMappingURL=adminlte.css.map */
