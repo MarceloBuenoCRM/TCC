@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="edit == true ? 'Editar Usuário' : 'Adicionar Usuário'" :visible.sync="dialogVisible"
+    <el-dialog :title="edit == true ? $t('message.edit', {msg: $tc('message.usuario', 1)}) : $t('message.add', {msg: $tc('message.usuario', 1)})" :visible.sync="dialogVisible"
         :before-close="closeModalForm" append-to-body>
         <div class="card card-gray-custom">
             <div class="card-header">
@@ -83,34 +83,34 @@
                 rules: {
                     cad_nome: [{
                         required: true,
-                        message : 'O campo Nome Completo é obrigatório.',
+                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.nome', 2)}),
                         trigger : "change",
                     }],
                     cad_email: [{
                             required: true,
-                            message : 'O campo E-mail é obrigatório.',
+                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.email')}),
                             trigger : "blur",
                         },
                         {
                             type   : 'email',
-                            message: 'O campo não contém um e-mail válido.',
+                            message: this.$t('message.rules.email_valido'),
                             trigger: "blur",
                         }
                     ],
                     cad_senha: [{
                             required: true,
-                            message : 'O campo Senha é obrigatório.',
+                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 1)}),
                             trigger : "change",
                         },
                         {
                             min    : 8,
-                            message: 'Deve conter pelo menos 8 caracteres.',
+                            message: this.$t('message.rules.min_caracter', [8]),
                             trigger: "blur",
                         }
                     ],
                     cad_confirma_senha: [{
                             required: true,
-                            message : 'O campo Confirmar Senha é obrigatório.',
+                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 2)}),
                             trigger : "change",
                         },
                         {

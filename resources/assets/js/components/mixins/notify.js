@@ -10,7 +10,7 @@ export default {
 
         notifyEdit(){
             return this.$notify({
-                title  : this.$t('message.exclusao_cancelada'),
+                title  : this.$t('message.sucesso'),
                 message: this.$t('message.registro_editado'),
                 type   : 'success'
             });
@@ -18,8 +18,8 @@ export default {
 
         notifyDelete(){
             return this.$notify({
-                title  : this.$t('message.exclusao_cancelada'),
-                message: this.$t('message.registro_exlcuido'),
+                title  : this.$t('message.sucesso'),
+                message: this.$t('message.registro_excluido'),
                 type   : 'success'
             });
         },
