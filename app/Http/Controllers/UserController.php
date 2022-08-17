@@ -58,7 +58,7 @@ class UserController extends Controller
 
     public function update($id, UserRequest $request)
     {
-        $data = $request->only('cad_email', 'cad_nome');
+        $data = $request->only('cad_email', 'cad_nome', 'tipo_usuario');
 
         $this->service->update($id, $data);
 

@@ -1,17 +1,12 @@
 export default [
     {
-        path: "/clinica/consultas/index",
-        name: "clinica.consultas.index",
-        component: "components/consultas/index",
+        path: "/aluno/aulas/aulas_reservadas/index",
+        name: "aluno.aulas.aulas_reservadas.index",
+        component: "components/aulas/aulas_reservadas/index",
     },
     {
-        path: "/clinica/ficha_anamnese/index",
-        name: "clinica.ficha_anamnese.index",
-        component: "components/ficha_anamnese/index",
-    },
-    {
-        path: "/clinica/pacientes/index",
-        name: "clinica.pacientes.index",
-        component: "components/pacientes/index",
+        path: "/aluno/aulas/historico/index",
+        name: "aluno.aulas.historico.index",
+        component: "components/aulas/historico/index",
     },
 ];

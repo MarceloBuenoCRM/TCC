@@ -14,7 +14,7 @@ routes.forEach(function (route) {
     })
 });
 
-routesModule.push({path: '*', redirect: {name: 'index'}});
+routesModule.push({path: '*', redirect: {name: 'aluno.aulas.aulas_reservadas.index'}});
 
 const router = new Router({
     mode: 'history',

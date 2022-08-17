@@ -24,16 +24,18 @@ class UserRequest extends FormRequest
     {
         return [
             'cad_nome'     => ['required'],
-            'cad_email'    => ['required', "unique:users,cad_email,{$this->get('id')},id"]
+            'cad_email'    => ['required', "unique:users,cad_email,{$this->get('id')},id"],
+            'tipo_usuario' => ['required'],
         ];
     }
 
     public function messages()
     {
         return [
-            'cad_nome.required'  => 'O campo Nome é um campo obrigatório.',
-            'cad_email.required' => 'O campo Email é um campo obrigatório.',
-            'cad_email.unique'   => 'Este E-mail já está cadastrado.'
+            'cad_nome.required'     => 'O campo Nome é um campo obrigatório.',
+            'cad_email.required'    => 'O campo Email é um campo obrigatório.',
+            'cad_email.unique'      => 'Este E-mail já está cadastrado.',
+            'tipo_usuario.required' => 'O campo Tipo Usuário é um campo obrigatório.',
         ];
     }
 }

@@ -63,10 +63,6 @@ Agora gere o Banco para testes
 
 `docker-compose run --rm artisan migrate`
 
-Gere a tabela de Cidades e Estados segundo a API da IBGE:
-
-`docker-compose run --rm artisan suporte:importa-cidade-estado`
-
 Gere o Usuário de testes
 
 `docker-compose run --rm artisan db:seed`

@@ -14,7 +14,7 @@ routes.forEach(function (route) {
     })
 });
 
-routesModule.push({path: '*', redirect: {name: 'index'}});
+routesModule.push({path: '*', redirect: {name: 'professor.cadastro.aula.index'}});
 
 const router = new Router({
     mode: 'history',

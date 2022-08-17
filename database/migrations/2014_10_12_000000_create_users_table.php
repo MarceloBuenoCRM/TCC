@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('cad_senha');
             $table->tinyInteger('cad_modo_escuro')->default('0');
+            $table->tinyInteger('tipo_usuario')->default('0');
             $table->string('cad_token_api')->default('');
             $table->rememberToken();
             $table->timestamps();

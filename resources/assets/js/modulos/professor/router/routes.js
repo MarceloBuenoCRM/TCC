@@ -1,17 +1,12 @@
 export default [
     {
-        path: "/clinica/consultas/index",
-        name: "clinica.consultas.index",
-        component: "components/consultas/index",
+        path: "/professor/cadastro/aula/index",
+        name: "professor.cadastro.aula.index",
+        component: "components/cadastro/aula/index",
     },
     {
-        path: "/clinica/ficha_anamnese/index",
-        name: "clinica.ficha_anamnese.index",
-        component: "components/ficha_anamnese/index",
-    },
-    {
-        path: "/clinica/pacientes/index",
-        name: "clinica.pacientes.index",
-        component: "components/pacientes/index",
+        path: "/professor/solicitacao/intervencao/index",
+        name: "professor.solicitacao.intervencao.index",
+        component: "components/solicitacao/intervencao/index",
     },
 ];

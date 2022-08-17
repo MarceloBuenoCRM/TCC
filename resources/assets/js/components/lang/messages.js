@@ -33,6 +33,10 @@ export default {
             pagina_nao_encontrada     : 'Oops! Página não encontrada.',
             pagina_nao_encontrada_link: "Não foi possível encontrar a página que você estava procurando. <a href='/'>Clique aqui</a> e volte para o Dashboard.",
             home                      : 'Home',
+            administrador             : 'Administrador',
+            professor                 : 'Professor',
+            aluno                     : 'Aluno',
+            tipo_usuario              : 'Tipo Usuário',
 
             rules: {
                 campo_obrigatorio: 'O campo {msg} é obrigatório.',

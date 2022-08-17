@@ -21,7 +21,8 @@ class UserModel extends Model
     {
         $query = $this->selectRaw("id,
                                 cad_nome,
-                                cad_email")
+                                cad_email,
+                                tipo_usuario")
                        ->orderBy('id');
 
         $query = $this->filter($query, $params);
