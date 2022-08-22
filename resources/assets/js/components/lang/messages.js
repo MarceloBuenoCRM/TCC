@@ -37,6 +37,13 @@ export default {
             professor                 : 'Professor',
             aluno                     : 'Aluno',
             tipo_usuario              : 'Tipo Usuário',
+            sala_aula                 : 'Sala de Aula',
+            cadastro                  : 'Cadastro',
+            num_sala                  : 'Número da Sala',
+            latitude                  : 'Latitude',
+            longitude                 : 'Longitude',
+            diametro                  : 'Diâmetro',
+            bloco                     : 'Bloco',
 
             rules: {
                 campo_obrigatorio: 'O campo {msg} é obrigatório.',

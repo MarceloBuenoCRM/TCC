@@ -1,10 +1,10 @@
 <template>
-    <el-dialog :title="edit == true ? $t('message.edit', {msg: $tc('message.usuario', 1)}) : $t('message.add', {msg: $tc('message.usuario', 1)})" :visible.sync="dialogVisible"
+    <el-dialog :title="edit == true ? $t('message.edit', {msg: $t('message.sala_aula')}) : $t('message.add', {msg: $t('message.sala_aula')})" :visible.sync="dialogVisible"
         :before-close="closeModalForm" append-to-body>
         <div class="card card-gray-custom">
             <div class="card-header">
                 <h3 class="card-title">
-                    {{$tc('message.usuario', 1)}}
+                    {{$t('message.sala_aula')}}
                 </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -13,36 +13,39 @@
                 </div>
             </div>
             <div class="card-body">
-                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
+                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formSalaAula">
                     <div class="row">
-                        <el-form-item :label="$tc('message.nome', 2)" class="col-sm-12 col-md-12" size="mini" prop="cad_nome">
-                            <el-input v-model="form.cad_nome" clearable></el-input>
-                        </el-form-item>
-
-                        <el-form-item :label="$t('message.email')" class="col-sm-12 col-md-4" :class="[{'col-md-12': edit}, {'is-error': hasError('cad_email')}]"
-                            size="mini" prop="cad_email">
-                            <el-input v-model="form.cad_email" clearable @blur="clearError"></el-input>
-                            <div class="el-form-item__error" v-if="hasError('cad_email')">
-                                {{errors['cad_email'][0]}}
+                        <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-4" :class="{'is-error': hasError('cad_num_sala')}" size="mini" prop="cad_num_sala">
+                            <el-input v-model="form.cad_num_sala" clearable></el-input>
+                            <div class="el-form-item__error" v-if="hasError('cad_num_sala')">
+                                {{errors['cad_num_sala'][0]}}
                             </div>
                         </el-form-item>
 
-                        <el-form-item :label="$tc('message.senha', 1)" class="col-sm-12 col-md-4" size="mini" prop="cad_senha" v-if="!edit">
-                            <el-input type="password" v-model="form.cad_senha">
+                        <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-4" size="mini" prop="cad_bloco">
+                            <el-input v-model="form.cad_bloco" clearable>
                             </el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$tc('message.senha', 2)" class="col-sm-12 col-md-4" size="mini" prop="cad_confirma_senha" v-if="!edit">
-                            <el-input type="password" v-model="form.cad_confirma_senha">
+                        <el-form-item :label="$t('message.diametro')" class="col-sm-12 col-md-4" size="mini" prop="cad_diametro">
+                            <el-input v-model="form.cad_diametro" clearable>
                             </el-input>
                         </el-form-item>
 
-                        <el-form-item class="col-sm-12 col-md-12" :label="$t('message.tipo_usuario')" size="mini" prop="tipo_usuario">
-                            <el-radio-group v-model="form.tipo_usuario">
-                                <el-radio :label="0">{{$t('message.administrador')}}</el-radio>
-                                <el-radio :label="1">{{$t('message.professor')}}</el-radio>
-                                <el-radio :label="2">{{$t('message.aluno')}}</el-radio>
-                            </el-radio-group>
+                        <el-form-item :label="$t('message.latitude')" class="col-sm-12 col-md-6" size="mini" prop="cad_latitude">
+                            <el-input v-model="form.cad_latitude" clearable >
+                                <el-button slot="prepend">
+                                   <i class="fas fa-map-marked"></i>
+                                </el-button>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.longitude')" class="col-sm-12 col-md-6" size="mini" prop="cad_longitude">
+                            <el-input v-model="form.cad_longitude" clearable >
+                                <el-button slot="prepend">
+                                   <i class="fas fa-map-marked"></i>
+                                </el-button>
+                            </el-input>
                         </el-form-item>
                     </div>
                 </el-form>
@@ -53,7 +56,7 @@
             <button type="button" class="btn btn-light btn-sm" @click="closeModalForm()">
                 {{$t('message.cancelar')}}
             </button>
-            <button native-type="submit" class="btn btn-primary btn-sm" form="formUsuarios">
+            <button native-type="submit" class="btn btn-primary btn-sm" form="formSalaAula">
                 <i class="fas fa-save"></i>
                 {{$t('message.gravar')}}
             </button>
@@ -72,64 +75,33 @@
         },
 
         data() {
-            var validatePass = (rule, value, callback) => {
-                if (value !== this.form.cad_senha) {
-                    callback(new Error('As senhas não confere.'));
-                } else {
-                    callback();
-                }
-            };
-
             return {
-                activeCollpase: 'defeito',
                 form          : {
-                    cad_nome          : '',
-                    cad_email         : '',
-                    cad_senha         : '',
-                    cad_confirma_senha: '',
-                    tipo_usuario      : 0
+                    cad_num_sala : '',
+                    cad_bloco    : '',
+                    cad_diametro : '',
+                    cad_latitude : '',
+                    cad_longitude: ''
                 },
                 rules: {
-                    cad_nome: [{
+                    cad_num_sala: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.nome', 2)}),
+                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.num_sala')}),
                         trigger : "change",
                     }],
-                    cad_email: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.email')}),
-                            trigger : "blur",
-                        },
-                        {
-                            type   : 'email',
-                            message: this.$t('message.rules.email_valido'),
-                            trigger: "blur",
-                        }
-                    ],
-                    cad_senha: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 1)}),
-                            trigger : "change",
-                        },
-                        {
-                            min    : 8,
-                            message: this.$t('message.rules.min_caracter', [8]),
-                            trigger: "blur",
-                        }
-                    ],
-                    cad_confirma_senha: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 2)}),
-                            trigger : "change",
-                        },
-                        {
-                            validator: validatePass,
-                            trigger  : 'change'
-                        }
-                    ],
-                    tipo_usuario: [{
+                    cad_diametro: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.tipo_usuario')}),
+                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.diametro')}),
+                        trigger : "change",
+                    }],
+                    cad_latitude: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.latitude')}),
+                        trigger : "change",
+                    }],
+                    cad_longitude: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.longitude')}),
                         trigger : "change",
                     }],
                 },
@@ -152,7 +124,7 @@
                     self.clearError();
 
                     if (self.edit == true) {
-                        axios.put('/sistema/usuario/' + self.form.id, self.form)
+                        axios.put('/sistema/sala_aula/' + self.form.id, self.form)
                             .then(function () {
                                 self.notifyEdit();
                                 self.$emit('loadData');
@@ -163,7 +135,7 @@
                                 self.notifyErrorValidation();
                             })
                     } else {
-                        axios.post('/sistema/usuario', self.form)
+                        axios.post('/sistema/sala_aula', self.form)
                             .then(function () {
                                 self.notifyAdd();
                                 self.$emit('loadData');
@@ -177,10 +149,10 @@
                 })
             },
 
-            carregaDados(id_usuario) {
+            carregaDados(id_sala_aula) {
                 let self = this;
 
-                axios.get('/sistema/usuario/' + id_usuario)
+                axios.get('/sistema/sala_aula/' + id_sala_aula)
                     .then(function (response) {
                         self.form = response.data.data.data[0];
                     })

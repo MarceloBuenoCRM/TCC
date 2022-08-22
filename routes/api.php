@@ -25,12 +25,12 @@ Route::prefix('auth')->group(function() {
 
 
 Route::middleware('auth:sanctum')->group(function() {
-    Route::resource('exemplo', 'App\Http\Controllers\ExemploModelController');
-
     Route::prefix('sistema')->group(function() {
+        /* Usuário */
         Route::resource('usuario', 'App\Http\Controllers\UserController', ['parameters' => ['' => 'id']]);
         Route::put('usuario/modo_escuro/{id}', ['as' => 'usuario.modo_escuro', 'uses' => 'App\Http\Controllers\UserController@alteraModoEscuro']);
-        Route::resource('ficha', 'App\Http\Controllers\FichaController', ['parameters' => ['' => 'id']]);
-        Route::resource('paciente', 'App\Http\Controllers\PacienteController', ['parameters' => ['' => 'id']]);
+
+        /* Sala de Aula */
+        Route::resource('sala_aula', 'App\Http\Controllers\SalaController', ['parameters' => ['' => 'id']]);
     });
 });

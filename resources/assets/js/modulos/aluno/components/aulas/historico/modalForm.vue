@@ -74,7 +74,7 @@
         data() {
             var validatePass = (rule, value, callback) => {
                 if (value !== this.form.cad_senha) {
-                    callback(new Error('As senhas não confere.'));
+                    callback(new Error('As senhas não conferem.'));
                 } else {
                     callback();
                 }

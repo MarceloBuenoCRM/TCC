@@ -19,22 +19,22 @@ class ApiLoginController extends Controller
             'cad_senha' => 'required',
         ],
         [
-            'cad_email.required' => 'Email é um parâmetro necessário!',
+            'cad_email.required' => 'E-mail é um parâmetro necessário!',
             'cad_senha.required' => 'Senha é um parâmetro necessário!'
         ]);
 
         $credentials = $request->only('cad_email', 'cad_senha');
 
         $user = User::where('cad_email', $credentials['cad_email']);
-      
+
         if(!$user->first() || !Hash::check($credentials['cad_senha'], $user->first()->cad_senha)) {
             abort(401, 'Credenciais Inválidas');
         }
 
         Auth::login($user->first());
-        
+
         $token = Auth::user()->createToken(Auth::user()->cad_email);
-       
+
         return response()->json([
             'data' => [
                 'token' => substr($token->plainTextToken, strpos($token->plainTextToken, "|") + 1),
@@ -52,7 +52,7 @@ class ApiLoginController extends Controller
                 'user' => Auth::user()->cad_nome,
                 'cad_modo_escuro' => Auth::user()->cad_modo_escuro,
             ]
-        ]); 
+        ]);
     }
 
     public function logout(Request $request)

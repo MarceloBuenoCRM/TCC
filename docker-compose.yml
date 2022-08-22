@@ -9,12 +9,12 @@ services:
         build: ./docker/php
         container_name: php
         restart: unless-stopped
-        volumes: 
+        volumes:
             - ./:/var/www/html
-        networks: 
+        networks:
             - project-network
 
-    nginx: 
+    nginx:
         image: crmsolucoes/nginx-stable-alpine:latest
         container_name: nginx
         restart: unless-stopped
@@ -48,7 +48,7 @@ services:
         working_dir: /var/www/html
         networks:
             - project-network
-    
+
     npm:
         image: node:12
         container_name: npm
@@ -76,7 +76,7 @@ services:
             - ./mysql:/var/lib/mysql
         networks:
             - project-network
-    
+
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         restart: always

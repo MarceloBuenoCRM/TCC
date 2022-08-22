@@ -38,9 +38,9 @@ class PasswordResetLinkController extends Controller
         ]);
 
         $user = User::where('cad_email', $request->cad_email)->first();
-        
+
         if (!$user) {
-            return back()->with('status', __('Não conseguimos encontrar um usuário com este Email cadastrado no sistema.'));
+            return redirect()->back()->withErrors(['msg' => 'Não conseguimos encontrar um usuário com este e-mail cadastrado no sistema.'])->withInput();
         }
 
         $token = DB::table('password_resets')->where('email', $request->cad_email);
@@ -52,11 +52,11 @@ class PasswordResetLinkController extends Controller
         $token = Str::random(64);
 
         DB::table('password_resets')->insert([
-            'email' => $request->cad_email, 
-            'token' => $token, 
+            'email' => $request->cad_email,
+            'token' => $token,
             'created_at' => Carbon::now()
         ]);
-       
+
         Mail::send('mail.layout', ['token' => $token, 'cad_email' => $request->cad_email], function($message) use($request){
 
             $message->to($request->cad_email);
@@ -65,6 +65,6 @@ class PasswordResetLinkController extends Controller
 
         });
 
-        return back()->with('status', __('Enviamos o Link para alterar sua Senha no seu Email!'));
+        return back()->with('status', __('Enviamos o link no seu e-mail para redefinir sua senha!'));
     }
 }

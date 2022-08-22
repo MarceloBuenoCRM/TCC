@@ -8,6 +8,7 @@
                         {{$t('message.sistema')}}
                     </a>
                 </li>
+                <li class="breadcrumb-item">{{$t('message.cadastro')}}</li>
                 <li class="breadcrumb-item active">{{$tc('message.usuario', 2)}}</li>
             </ol>
         </div>

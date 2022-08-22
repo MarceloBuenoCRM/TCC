@@ -1,5 +1,5 @@
 <head>
-    <title>Name - Cadastro</title>
+    <title>Cadastro</title>
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('css/appLogin.css') }}">
 </head>

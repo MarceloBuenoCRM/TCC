@@ -14,7 +14,7 @@ return [
     */
 
     'reset' => 'A sua Senha foi alterada com sucesso!',
-    'sent' => 'Enviamos o Link para alterar sua Senha no seu Email!',
+    'sent' => 'Enviamos o link no seu e-mail para redefinir sua senha!',
     'throttled' => 'Por favor aguarde antes de tentar novamente.',
     'token' => 'O Token para alterar a Senha é inválido.',
     'user' => "Não conseguimos encontrar um usuário com este Email cadastrado.",

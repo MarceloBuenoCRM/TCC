@@ -34,7 +34,7 @@ class UserRequest extends FormRequest
         return [
             'cad_nome.required'     => 'O campo Nome é um campo obrigatório.',
             'cad_email.required'    => 'O campo Email é um campo obrigatório.',
-            'cad_email.unique'      => 'Este E-mail já está cadastrado.',
+            'cad_email.unique'      => 'Registro já existente na base de dados.',
             'tipo_usuario.required' => 'O campo Tipo Usuário é um campo obrigatório.',
         ];
     }

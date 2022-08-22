@@ -8,7 +8,8 @@
                         {{$t('message.sistema')}}
                     </a>
                 </li>
-                <li class="breadcrumb-item active">{{$tc('message.usuario', 2)}}</li>
+                <li class="breadcrumb-item">{{$t('message.cadastro')}}</li>
+                <li class="breadcrumb-item active">{{$t('message.sala_aula')}}</li>
             </ol>
         </div>
 
@@ -18,7 +19,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6 content_index">
-                                <h1 class="m-0">{{$tc('message.usuario', 2)}}</h1>
+                                <h1 class="m-0">{{$t('message.sala_aula')}}</h1>
                             </div>
                         </div>
 
@@ -57,15 +58,21 @@
                                         </div>
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
-                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
-                                            <el-form-item :label="$tc('message.nome', 1)" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                <el-input v-model="form.cad_nome" clearable></el-input>
-                                            </el-form-item>
+                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexSalaAula">
+                                            <div class="row">
+                                                <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-3" size="mini" prop="cad_num_sala">
+                                                    <el-input v-model="form.cad_num_sala" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-3" size="mini" prop="cad_bloco">
+                                                    <el-input v-model="form.cad_bloco" clearable></el-input>
+                                                </el-form-item>
+                                            </div>
                                         </el-form>
                                     </div>
                                     <div class="card-footer card_footer_index">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexUsuario">
+                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexSalaAula">
                                                 <i class="fas fa-search"></i>
                                                 {{$t('message.buscar')}}
                                             </button>
@@ -78,14 +85,14 @@
                                     </div>
                                 </div>
 
-                                <el-table :data="usuarios" style="width: 100%" tooltip-effect="dark" stripe>
+                                <el-table :data="salas" style="width: 100%" tooltip-effect="dark" stripe>
                                     <el-table-column prop="id" :label="$t('message.id')" width="120px" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" :label="$tc('message.nome', 2)" show-overflow-tooltip>
+                                    <el-table-column prop="cad_num_sala" :label="$t('message.num_sala')" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_email" :label="$t('message.email')" show-overflow-tooltip>
+                                    <el-table-column prop="cad_bloco" :label="$t('message.bloco')" show-overflow-tooltip>
                                     </el-table-column>
 
                                     <el-table-column label="Funções" align="center">
@@ -128,11 +135,12 @@
         data() {
             return {
                 form: {
-                    cad_nome: '',
-                    per_page: 5,
+                    cad_num_sala: '',
+                    cad_bloco   : '',
+                    per_page    : 5,
                 },
                 url        : '',
-                usuarios   : [],
+                salas      : [],
                 edit       : false,
                 next_page  : false,
                 prev_page  : false,
@@ -157,10 +165,10 @@
                 self.$refs.modalForm.show();
             },
 
-            delete(id_usuario) {
+            delete(id_sala_aula) {
                 let self = this;
 
-                axios.delete('/sistema/usuario/' + id_usuario)
+                axios.delete('/sistema/sala_aula/' + id_sala_aula)
                     .then(function () {
                         self.submitForm();
                         self.notifyDelete();
@@ -179,10 +187,10 @@
             searchForm(page, page_size) {
                 let self = this;
 
-                self.resetUsuarios();
+                self.resetSalas();
                 self.form.per_page = page_size;
                 self.form.page     = page;
-                self.url           = self.mountUrl('/sistema/usuario?', self.form);
+                self.url           = self.mountUrl('/sistema/sala_aula?', self.form);
 
                 axios.get(self.url)
                     .then(function (response) {
@@ -190,17 +198,17 @@
                         self.form.per_page = parseInt(response.data.data.per_page);
                         self.next_page     = Boolean(response.data.data.next_page_url);
                         self.prev_page     = Boolean(response.data.data.prev_page_url);
-                        self.usuarios      = self.mountDataTable(response.data.data.data);
+                        self.salas         = self.mountDataTable(response.data.data.data);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-            resetUsuarios() {
+            resetSalas() {
                 let self = this;
 
-                self.usuarios = [];
+                self.salas = [];
             }
         }
     }
