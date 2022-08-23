@@ -1,4 +1,9 @@
 <template>
+
+<!-- FALTA TEMPO MINIMO E TEMPO DE TOLERANCIA -->
+
+
+
     <div class="d-flex flex-column">
         <div class="content-header col-sm-6 breadcrumb_index">
             <ol class="breadcrumb float-sm-left">
@@ -8,7 +13,8 @@
                         {{$t('message.sistema')}}
                     </a>
                 </li>
-                <li class="breadcrumb-item active">{{$tc('message.usuario', 2)}}</li>
+                <li class="breadcrumb-item">{{$t('message.cadastro')}}</li>
+                <li class="breadcrumb-item active">{{$t('message.aula')}}</li>
             </ol>
         </div>
 
@@ -18,7 +24,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6 content_index">
-                                <h1 class="m-0">{{$tc('message.usuario', 2)}}</h1>
+                                <h1 class="m-0">{{$t('message.aula')}}</h1>
                             </div>
                         </div>
 
@@ -57,20 +63,54 @@
                                         </div>
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
-                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
-                                            <el-form-item :label="$tc('message.nome', 1)" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                <el-input v-model="form.cad_nome" clearable></el-input>
-                                            </el-form-item>
+                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm"
+                                            @submit.native.prevent="submitForm()" id="formIndexAula">
+                                            <div class="row">
+                                                <el-form-item :label="$t('message.disciplina')"
+                                                    class="col-sm-12 col-md-2" size="mini" prop="cad_disciplina">
+                                                    <el-input v-model="form.cad_disciplina" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.curso')" class="col-sm-12 col-md-2"
+                                                    size="mini" prop="cad_curso">
+                                                    <el-input v-model="form.cad_curso" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.periodo')" class="col-sm-12 col-md-2"
+                                                    size="mini" prop="cad_periodo">
+                                                    <el-input v-model="form.cad_periodo" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.data_hora_inicio')"
+                                                    class="col-sm-12 col-md-2" size="mini" prop="cad_data_hora_inicio">
+                                                    <el-input v-model="form.cad_data_hora_inicio" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.data_hora_fim')"
+                                                    class="col-sm-12 col-md-2" size="mini" prop="cad_data_hora_fim">
+                                                    <el-input v-model="form.cad_data_hora_fim" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-2"
+                                                    size="mini" prop="cad_num_sala">
+                                                    <el-input v-model="form.cad_num_sala" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-2"
+                                                    size="mini" prop="cad_bloco">
+                                                    <el-input v-model="form.cad_bloco" clearable></el-input>
+                                                </el-form-item>
+                                            </div>
                                         </el-form>
                                     </div>
                                     <div class="card-footer card_footer_index">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexUsuario">
+                                            <button native-type="submit" class="btn btn-primary btn-sm"
+                                                form="formIndexAula">
                                                 <i class="fas fa-search"></i>
                                                 {{$t('message.buscar')}}
                                             </button>
-                                            <button type="button" class="btn btn-light btn-sm"
-                                            @click="resetForm()">
+                                            <button type="button" class="btn btn-light btn-sm" @click="resetForm()">
                                                 <i class="fas fa-undo"></i>
                                                 {{$t('message.limpar')}}
                                             </button>
@@ -79,29 +119,55 @@
                                 </div>
 
                                 <el-table :data="usuarios" style="width: 100%" tooltip-effect="dark" stripe>
-                                    <el-table-column prop="id" :label="$t('message.id')" width="120px" show-overflow-tooltip>
+                                    <el-table-column prop="id" :label="$t('message.id')" width="120px"
+                                        show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" :label="$tc('message.nome', 2)" show-overflow-tooltip>
+                                    <el-table-column prop="cad_disciplina" :label="$t('message.disciplina')"
+                                        show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_email" :label="$t('message.email')" show-overflow-tooltip>
+                                    <el-table-column prop="cad_curso" :label="$t('message.curso')"
+                                        show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_periodo" :label="$t('message.periodo')"
+                                        show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_data_hora_inicio" :label="$t('message.data_hora_inicio')"
+                                        show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_data_hora_fim" :label="$t('message.data_hora_fim')"
+                                        show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_num_sala" :label="$t('message.num_sala')"
+                                        show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_bloco" :label="$t('message.bloco')"
+                                        show-overflow-tooltip>
                                     </el-table-column>
 
                                     <el-table-column label="Funções" align="center">
                                         <template slot-scope="scope">
-                                            <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)" :title="$t('message.editar')">
+                                            <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)"
+                                                :title="$t('message.editar')">
                                                 <i class="fas fa-edit" style="color:#0085fa;"></i>
                                             </a>
 
-                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)" :title="$t('message.excluir')">
+                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)"
+                                                :title="$t('message.excluir')">
                                                 <i class="fas fa-trash-alt" style="color:#f00;"></i>
                                             </a>
                                         </template>
                                     </el-table-column>
                                 </el-table>
 
-                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page" :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
+                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page"
+                                    :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
                                 </pagination>
                             </div>
                         </div>
@@ -114,9 +180,9 @@
 </template>
 
 <script>
-    import modalForm  from './modalForm';
-    import funcoes    from '../../../../../components/mixins/funcoes';
-    import notify     from '../../../../../components/mixins/notify.js';
+    import modalForm from './modalForm';
+    import funcoes from '../../../../../components/mixins/funcoes';
+    import notify from '../../../../../components/mixins/notify.js';
     import pagination from '../../../../../components/partials/simplePagination.vue';
 
     export default {
@@ -204,4 +270,5 @@
             }
         }
     }
+
 </script>

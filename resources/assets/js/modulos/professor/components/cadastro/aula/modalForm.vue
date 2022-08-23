@@ -1,10 +1,11 @@
 <template>
-    <el-dialog :title="edit == true ? $t('message.edit', {msg: $tc('message.usuario', 1)}) : $t('message.add', {msg: $tc('message.usuario', 1)})" :visible.sync="dialogVisible"
-        :before-close="closeModalForm" append-to-body>
+    <el-dialog
+        :title="edit == true ? $t('message.edit', {msg: $t('message.aula')}) : $t('message.add', {msg: $t('message.aula')})"
+        :visible.sync="dialogVisible" :before-close="closeModalForm" append-to-body>
         <div class="card card-gray-custom">
             <div class="card-header">
                 <h3 class="card-title">
-                    {{$tc('message.usuario', 1)}}
+                    {{$t('message.aula')}}
                 </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -13,36 +14,46 @@
                 </div>
             </div>
             <div class="card-body">
-                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
+                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm"
+                    @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
-                        <el-form-item :label="$tc('message.nome', 2)" class="col-sm-12 col-md-12" size="mini" prop="cad_nome">
-                            <el-input v-model="form.cad_nome" clearable></el-input>
+                        <el-form-item :label="$t('message.disciplina')" class="col-sm-12 col-md-6" size="mini"
+                            prop="cad_disciplina">
+                            <el-input v-model="form.cad_disciplina" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('message.email')" class="col-sm-12 col-md-4" :class="[{'col-md-12': edit}, {'is-error': hasError('cad_email')}]"
-                            size="mini" prop="cad_email">
-                            <el-input v-model="form.cad_email" clearable @blur="clearError"></el-input>
-                            <div class="el-form-item__error" v-if="hasError('cad_email')">
-                                {{errors['cad_email'][0]}}
-                            </div>
+                        <el-form-item :label="$t('message.curso')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_curso">
+                            <el-input v-model="form.cad_curso" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$tc('message.senha', 1)" class="col-sm-12 col-md-4" size="mini" prop="cad_senha" v-if="!edit">
-                            <el-input type="password" v-model="form.cad_senha">
-                            </el-input>
+                        <el-form-item :label="$t('message.periodo')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_periodo">
+                            <el-input v-model="form.cad_periodo" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$tc('message.senha', 2)" class="col-sm-12 col-md-4" size="mini" prop="cad_confirma_senha" v-if="!edit">
-                            <el-input type="password" v-model="form.cad_confirma_senha">
-                            </el-input>
+                        <el-form-item :label="$t('message.data_hora_inicio')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_data_hora_inicio">
+                            <el-date-picker v-model="form.cad_data_hora_inicio" type="datetime" format="dd/MM/yyyy HH:mm:ss"
+                                value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
+                            </el-date-picker>
                         </el-form-item>
 
-                        <el-form-item class="col-sm-12 col-md-12" :label="$t('message.tipo_usuario')" size="mini" prop="tipo_usuario">
-                            <el-radio-group v-model="form.tipo_usuario">
-                                <el-radio :label="0">{{$t('message.administrador')}}</el-radio>
-                                <el-radio :label="1">{{$t('message.professor')}}</el-radio>
-                                <el-radio :label="2">{{$t('message.aluno')}}</el-radio>
-                            </el-radio-group>
+                        <el-form-item :label="$t('message.data_hora_fim')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_data_hora_fim">
+                            <el-date-picker v-model="form.cad_data_hora_fim" type="datetime" format="dd/MM/yyyy HH:mm:ss"
+                                value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
+                            </el-date-picker>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_num_sala">
+                            <el-input v-model="form.cad_num_sala" clearable></el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-3" size="mini"
+                            prop="cad_bloco">
+                            <el-input v-model="form.cad_bloco" clearable></el-input>
                         </el-form-item>
                     </div>
                 </el-form>
@@ -62,8 +73,8 @@
 </template>
 
 <script>
-    import funcoes     from '../../../../../components/mixins/funcoes';
-    import notify      from '../../../../../components/mixins/notify';
+    import funcoes from '../../../../../components/mixins/funcoes';
+    import notify from '../../../../../components/mixins/notify';
     import modalMixins from '../../../../../components/mixins/modalMixins';
 
     export default {
@@ -83,22 +94,27 @@
             return {
                 activeCollpase: 'defeito',
                 form          : {
-                    cad_nome          : '',
-                    cad_email         : '',
-                    cad_senha         : '',
-                    cad_confirma_senha: '',
-                    tipo_usuario      : 0
+                    cad_data_hora_inicio: moment().format('YYYY-MM-DD 19:10:00'),
+                    cad_nome            : '',
+                    cad_email           : '',
+                    cad_senha           : '',
+                    cad_confirma_senha  : '',
+                    tipo_usuario        : 0
                 },
                 rules: {
                     cad_nome: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.nome', 2)}),
-                        trigger : "change",
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$tc('message.nome', 2)
+                        }),
+                        trigger: "change",
                     }],
                     cad_email: [{
                             required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.email')}),
-                            trigger : "blur",
+                            message : this.$t('message.rules.campo_obrigatorio', {
+                                msg: this.$t('message.email')
+                            }),
+                            trigger: "blur",
                         },
                         {
                             type   : 'email',
@@ -108,8 +124,10 @@
                     ],
                     cad_senha: [{
                             required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 1)}),
-                            trigger : "change",
+                            message : this.$t('message.rules.campo_obrigatorio', {
+                                msg: this.$tc('message.senha', 1)
+                            }),
+                            trigger: "change",
                         },
                         {
                             min    : 8,
@@ -119,8 +137,10 @@
                     ],
                     cad_confirma_senha: [{
                             required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: this.$tc('message.senha', 2)}),
-                            trigger : "change",
+                            message : this.$t('message.rules.campo_obrigatorio', {
+                                msg: this.$tc('message.senha', 2)
+                            }),
+                            trigger: "change",
                         },
                         {
                             validator: validatePass,
@@ -129,8 +149,10 @@
                     ],
                     tipo_usuario: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: this.$t('message.tipo_usuario')}),
-                        trigger : "change",
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.tipo_usuario')
+                        }),
+                        trigger: "change",
                     }],
                 },
                 errors: []
@@ -197,4 +219,5 @@
             }
         }
     }
+
 </script>

@@ -44,6 +44,12 @@ export default {
             longitude                 : 'Longitude',
             diametro                  : 'Diâmetro',
             bloco                     : 'Bloco',
+            aula                      : 'Aula',
+            disciplina                : 'Disciplina',
+            curso                     : 'Curso',
+            periodo                   : 'Período',
+            data_hora_inicio          : 'Data / Hora Início',
+            data_hora_fim             : 'Data / Hora Fim',
 
             rules: {
                 campo_obrigatorio: 'O campo {msg} é obrigatório.',

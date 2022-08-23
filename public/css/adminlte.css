@@ -55900,4 +55900,27 @@ a.text-muted:hover {
     background-color: #3f6791 !important;
     border-color: #3f6791 !important;
 }
+
+.dark-mode .el-picker-panel,
+.dark-mode .el-picker-panel__footer,
+.dark-mode .el-picker-panel__footer button{
+    background-color: #343A40;
+}
+
+.dark-mode .el-picker-panel__footer button:hover{
+    color: #fff;
+    border-color: #fff;
+    background-color: #454D55;
+}
+
+.dark-mode .el-picker-panel__icon-btn,
+.dark-mode .el-picker-panel__icon-btn,
+.dark-mode .el-date-picker__header-label,
+.dark-mode .el-date-table th,
+.dark-mode .el-year-table td .cell,
+.dark-mode .el-month-table td .cell,
+.dark-mode .el-picker-panel__footer button{
+    color: #fff
+}
+
 /*# sourceMappingURL=adminlte.css.map */
