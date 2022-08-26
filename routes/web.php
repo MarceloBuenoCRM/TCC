@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'verify_token']], function () {
     Route::get('token', ['as' => 'api.token', 'uses' => 'App\Http\Controllers\Auth\Api\ApiLoginController@returnToken']);
 
     Route::get('/', function () {

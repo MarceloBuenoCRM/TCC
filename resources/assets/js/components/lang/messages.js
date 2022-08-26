@@ -50,6 +50,8 @@ export default {
             periodo                   : 'Período',
             data_hora_inicio          : 'Data / Hora Início',
             data_hora_fim             : 'Data / Hora Fim',
+            tempo_minimo              : 'Tempo Mínimo (minutos)',
+            tempo_tolerancia          : 'Tempo Tolerância (minutos)',
 
             rules: {
                 campo_obrigatorio: 'O campo {msg} é obrigatório.',

@@ -62,3 +62,7 @@
     line-height: 0 !important;
     font-size: 16px !important;
 }
+
+.el-input-number{
+    width: 100% !important;
+}

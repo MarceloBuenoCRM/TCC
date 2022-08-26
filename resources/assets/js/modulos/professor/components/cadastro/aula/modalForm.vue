@@ -17,43 +17,52 @@
                 <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm"
                     @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
-                        <el-form-item :label="$t('message.disciplina')" class="col-sm-12 col-md-6" size="mini"
+                        <el-form-item :label="$t('message.professor')" class="col-sm-12 col-md-4" size="mini" prop="dsc_professor">
+                            <el-input v-model="form.dsc_professor" readonly>
+                            </el-input>
+                        </el-form-item>
+                        
+                        <el-form-item :label="$t('message.disciplina')" class="col-sm-12 col-md-4" size="mini"
                             prop="cad_disciplina">
                             <el-input v-model="form.cad_disciplina" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('message.curso')" class="col-sm-12 col-md-3" size="mini"
+                        <el-form-item :label="$t('message.curso')" class="col-sm-12 col-md-4" size="mini"
                             prop="cad_curso">
                             <el-input v-model="form.cad_curso" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('message.periodo')" class="col-sm-12 col-md-3" size="mini"
-                            prop="cad_periodo">
+                        <el-form-item :label="$t('message.periodo')" class="col-sm-12 col-md-4" size="mini" prop="cad_periodo">
                             <el-input v-model="form.cad_periodo" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('message.data_hora_inicio')" class="col-sm-12 col-md-3" size="mini"
-                            prop="cad_data_hora_inicio">
-                            <el-date-picker v-model="form.cad_data_hora_inicio" type="datetime" format="dd/MM/yyyy HH:mm:ss"
-                                value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
-                            </el-date-picker>
-                        </el-form-item>
-
-                        <el-form-item :label="$t('message.data_hora_fim')" class="col-sm-12 col-md-3" size="mini"
-                            prop="cad_data_hora_fim">
-                            <el-date-picker v-model="form.cad_data_hora_fim" type="datetime" format="dd/MM/yyyy HH:mm:ss"
-                                value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
-                            </el-date-picker>
-                        </el-form-item>
-
-                        <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-3" size="mini"
-                            prop="cad_num_sala">
+                        <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-4" size="mini" prop="cad_num_sala">
                             <el-input v-model="form.cad_num_sala" clearable></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-3" size="mini"
+                        <el-form-item :label="$t('message.bloco')" class="col-sm-12 col-md-4" size="mini"
                             prop="cad_bloco">
                             <el-input v-model="form.cad_bloco" clearable></el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.data_hora_inicio')" class="col-sm-12 col-md-4" size="mini" prop="cad_data_hora_inicio">
+                            <el-date-picker v-model="form.cad_data_hora_inicio" type="datetime" format="dd/MM/yyyy HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
+                            </el-date-picker>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.data_hora_fim')" class="col-sm-12 col-md-4" size="mini" prop="cad_data_hora_fim">
+                            <el-date-picker v-model="form.cad_data_hora_fim" type="datetime" format="dd/MM/yyyy HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" v-mask="'##/##/#### ##:##:##'" clearable>
+                            </el-date-picker>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.tempo_minimo')" class="col-sm-12 col-md-4" size="mini" prop="cad_tempo_minimo">
+                            <el-input-number v-model="form.cad_tempo_minimo" @change="handleChange" :min="1" :max="180" clearable>
+                            </el-input-number>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('message.tempo_tolerancia')" class="col-sm-12 col-md-4" size="mini" prop="cad_tempo_tolerancia">
+                            <el-input-number v-model="form.cad_tempo_tolerancia" @change="handleChange" :min="1" :max="20" clearable>
+                            </el-input-number>
                         </el-form-item>
                     </div>
                 </el-form>
@@ -94,65 +103,80 @@
             return {
                 activeCollpase: 'defeito',
                 form          : {
+                    dsc_professor       : Cookie.get('cad_nome'),
+                    cad_disciplina      : '',
+                    cad_curso           : '',
+                    cad_periodo         : '',
+                    cad_num_sala        : '',
+                    cad_bloco           : '',
                     cad_data_hora_inicio: moment().format('YYYY-MM-DD 19:10:00'),
-                    cad_nome            : '',
-                    cad_email           : '',
-                    cad_senha           : '',
-                    cad_confirma_senha  : '',
-                    tipo_usuario        : 0
+                    cad_data_hora_fim   : moment().format('YYYY-MM-DD 22:00:00'),
+                    cad_tempo_minimo    : 50,
+                    cad_tempo_tolerancia: 20
                 },
                 rules: {
-                    cad_nome: [{
+                    cad_disciplina: [{
                         required: true,
                         message : this.$t('message.rules.campo_obrigatorio', {
-                            msg: this.$tc('message.nome', 2)
+                            msg: this.$t('message.disciplina')
                         }),
                         trigger: "change",
                     }],
-                    cad_email: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {
-                                msg: this.$t('message.email')
-                            }),
-                            trigger: "blur",
-                        },
-                        {
-                            type   : 'email',
-                            message: this.$t('message.rules.email_valido'),
-                            trigger: "blur",
-                        }
-                    ],
-                    cad_senha: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {
-                                msg: this.$tc('message.senha', 1)
-                            }),
-                            trigger: "change",
-                        },
-                        {
-                            min    : 8,
-                            message: this.$t('message.rules.min_caracter', [8]),
-                            trigger: "blur",
-                        }
-                    ],
-                    cad_confirma_senha: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {
-                                msg: this.$tc('message.senha', 2)
-                            }),
-                            trigger: "change",
-                        },
-                        {
-                            validator: validatePass,
-                            trigger  : 'change'
-                        }
-                    ],
-                    tipo_usuario: [{
+                    cad_curso: [{
                         required: true,
                         message : this.$t('message.rules.campo_obrigatorio', {
-                            msg: this.$t('message.tipo_usuario')
+                            msg: this.$t('message.curso')
                         }),
                         trigger: "change",
+                    }],
+                    cad_periodo: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.periodo')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_num_sala: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.num_sala')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_bloco: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.bloco')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_data_hora_inicio: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.data_hora_inicio')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_data_hora_fim: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.data_hora_fim')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_tempo_minimo: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.tempo_minimo')
+                        }),
+                        trigger: "change",
+                    }],
+                    cad_tempo_tolerancia: [{
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: this.$t('message.tempo_tolerancia')
+                        }),
+                        trigger: "change"
                     }],
                 },
                 errors: []

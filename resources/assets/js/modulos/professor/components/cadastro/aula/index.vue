@@ -83,12 +83,14 @@
 
                                                 <el-form-item :label="$t('message.data_hora_inicio')"
                                                     class="col-sm-12 col-md-2" size="mini" prop="cad_data_hora_inicio">
-                                                    <el-input v-model="form.cad_data_hora_inicio" clearable></el-input>
+                                                    <el-input v-model="form.cad_data_hora_inicio" clearable>
+                                                    </el-input>
                                                 </el-form-item>
 
                                                 <el-form-item :label="$t('message.data_hora_fim')"
                                                     class="col-sm-12 col-md-2" size="mini" prop="cad_data_hora_fim">
-                                                    <el-input v-model="form.cad_data_hora_fim" clearable></el-input>
+                                                    <el-input v-model="form.cad_data_hora_fim" clearable>
+                                                    </el-input>
                                                 </el-form-item>
 
                                                 <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-2"
