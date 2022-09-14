@@ -66,3 +66,7 @@
 .el-input-number{
     width: 100% !important;
 }
+
+.el-date-editor--datetime{
+    width: 100% !important;
+}

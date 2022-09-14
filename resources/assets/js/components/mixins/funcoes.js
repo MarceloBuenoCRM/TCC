@@ -62,6 +62,14 @@ export default {
 
         clearError(){
             return this.errors = [];
-        }
+        },
+
+        formatDate(date){
+            return moment(date).format('DD/MM/YYYY')
+        },
+
+        formatDateTime(datetime){
+            return moment(datetime).format('DD/MM/YYYY HH:mm:ss')
+        },
     }
 }

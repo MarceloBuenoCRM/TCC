@@ -33,16 +33,16 @@
                         </el-form-item>
 
                         <el-form-item :label="$t('message.latitude')" class="col-sm-12 col-md-6" size="mini" prop="cad_latitude">
-                            <el-input v-model="form.cad_latitude" clearable >
-                                <el-button slot="prepend">
+                            <el-input v-model="form.cad_latitude" clearable disabled>
+                                <el-button slot="prepend" @click="getPosition()">
                                    <i class="fas fa-map-marked"></i>
                                 </el-button>
                             </el-input>
                         </el-form-item>
 
                         <el-form-item :label="$t('message.longitude')" class="col-sm-12 col-md-6" size="mini" prop="cad_longitude">
-                            <el-input v-model="form.cad_longitude" clearable >
-                                <el-button slot="prepend">
+                            <el-input v-model="form.cad_longitude" clearable disabled>
+                                <el-button slot="prepend" @click="getPosition()">
                                    <i class="fas fa-map-marked"></i>
                                 </el-button>
                             </el-input>
@@ -159,6 +159,17 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+
+            getPosition(){
+                navigator.geolocation.getCurrentPosition(this.showPosition)
+            },
+
+            showPosition(position){
+                let self = this;
+
+                self.form.cad_latitude  = position.coords.latitude;
+                self.form.cad_longitude = position.coords.longitude;
             },
 
             closeModalForm() {

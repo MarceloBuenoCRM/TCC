@@ -23,7 +23,6 @@ Route::prefix('auth')->group(function() {
     Route::post('logout', ['as' => 'api.logout', 'uses' => 'App\Http\Controllers\Auth\Api\ApiLoginController@logout']);
 });
 
-
 Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('sistema')->group(function() {
         /* Usuário */
@@ -32,5 +31,9 @@ Route::middleware('auth:sanctum')->group(function() {
 
         /* Sala de Aula */
         Route::resource('sala_aula', 'App\Http\Controllers\SalaController', ['parameters' => ['' => 'id']]);
+
+        /* Aula */
+        Route::resource('aula', 'App\Http\Controllers\AulaController', ['parameters' => ['' => 'id']]);
+        Route::get('aulas_reservadas', 'App\Http\Controllers\AulaController@getClassDay');
     });
 });

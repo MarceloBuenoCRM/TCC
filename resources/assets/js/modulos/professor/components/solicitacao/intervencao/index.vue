@@ -27,16 +27,6 @@
                                 <i class="fas fa-plus"></i>
                                 {{$t('message.novo')}}
                             </button>
-
-                            <button type="button" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-file-pdf"></i>
-                                {{$tc('message.exporta', 1)}}
-                            </button>
-
-                            <button type="button" class="btn btn-outline-success btn-sm">
-                                <i class="fas fa-file-excel"></i>
-                                {{$tc('message.exporta', 2)}}
-                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 <template>
 
-<!-- FALTA TEMPO MINIMO E TEMPO DE TOLERANCIA -->
+    <!-- FALTA TEMPO MINIMO E TEMPO DE TOLERANCIA -->
 
 
 
@@ -32,16 +32,6 @@
                             <button type="button" class="btn btn-primary btn-sm" @click="openModal()">
                                 <i class="fas fa-plus"></i>
                                 {{$t('message.novo')}}
-                            </button>
-
-                            <button type="button" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-file-pdf"></i>
-                                {{$tc('message.exporta', 1)}}
-                            </button>
-
-                            <button type="button" class="btn btn-outline-success btn-sm">
-                                <i class="fas fa-file-excel"></i>
-                                {{$tc('message.exporta', 2)}}
                             </button>
                         </div>
                     </div>
@@ -120,8 +110,8 @@
                                     </div>
                                 </div>
 
-                                <el-table :data="usuarios" style="width: 100%" tooltip-effect="dark" stripe>
-                                    <el-table-column prop="id" :label="$t('message.id')" width="120px"
+                                <el-table :data="aulas" style="width: 100%" tooltip-effect="dark" stripe>
+                                    <el-table-column prop="id" :label="$t('message.id')"
                                         show-overflow-tooltip>
                                     </el-table-column>
 
@@ -133,16 +123,18 @@
                                         show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_periodo" :label="$t('message.periodo')"
-                                        show-overflow-tooltip>
-                                    </el-table-column>
-
                                     <el-table-column prop="cad_data_hora_inicio" :label="$t('message.data_hora_inicio')"
                                         show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            {{formatDateTime(scope.row.cad_data_hora_inicio)}}
+                                        </template>
                                     </el-table-column>
 
                                     <el-table-column prop="cad_data_hora_fim" :label="$t('message.data_hora_fim')"
                                         show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            {{formatDateTime(scope.row.cad_data_hora_fim)}}
+                                        </template>
                                     </el-table-column>
 
                                     <el-table-column prop="cad_num_sala" :label="$t('message.num_sala')"
@@ -151,6 +143,18 @@
 
                                     <el-table-column prop="cad_bloco" :label="$t('message.bloco')"
                                         show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column label="Status">
+                                        <template slot-scope="scope">
+                                            <el-tag type="warning" v-if="verificaStatus(scope.row) == false">
+                                                PENDENTE
+                                            </el-tag>
+
+                                            <el-tag type="success" v-else>
+                                                FINALIZADO
+                                            </el-tag>
+                                        </template>
                                     </el-table-column>
 
                                     <el-table-column label="Funções" align="center">
@@ -186,6 +190,7 @@
     import funcoes from '../../../../../components/mixins/funcoes';
     import notify from '../../../../../components/mixins/notify.js';
     import pagination from '../../../../../components/partials/simplePagination.vue';
+    import moment from 'moment';
 
     export default {
         components: {
@@ -196,11 +201,17 @@
         data() {
             return {
                 form: {
-                    cad_nome: '',
-                    per_page: 5,
+                    cad_disciplina      : '',
+                    cad_curso           : '',
+                    cad_periodo         : '',
+                    cad_data_hora_inicio: '',
+                    cad_data_hora_fim   : '',
+                    cad_num_sala        : '',
+                    cad_bloco           : '',
+                    per_page            : 5,
                 },
                 url        : '',
-                usuarios   : [],
+                aulas      : [],
                 edit       : false,
                 next_page  : false,
                 prev_page  : false,
@@ -225,10 +236,10 @@
                 self.$refs.modalForm.show();
             },
 
-            delete(id_usuario) {
+            delete(id_aula) {
                 let self = this;
 
-                axios.delete('/sistema/usuario/' + id_usuario)
+                axios.delete('/sistema/aula/' + id_aula)
                     .then(function () {
                         self.submitForm();
                         self.notifyDelete();
@@ -247,10 +258,10 @@
             searchForm(page, page_size) {
                 let self = this;
 
-                self.resetUsuarios();
+                self.resetAulas();
                 self.form.per_page = page_size;
                 self.form.page     = page;
-                self.url           = self.mountUrl('/sistema/usuario?', self.form);
+                self.url           = self.mountUrl('/sistema/aula?', self.form);
 
                 axios.get(self.url)
                     .then(function (response) {
@@ -258,17 +269,25 @@
                         self.form.per_page = parseInt(response.data.data.per_page);
                         self.next_page     = Boolean(response.data.data.next_page_url);
                         self.prev_page     = Boolean(response.data.data.prev_page_url);
-                        self.usuarios      = self.mountDataTable(response.data.data.data);
+                        self.aulas         = self.mountDataTable(response.data.data.data);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-            resetUsuarios() {
+            verificaStatus(row){
+                if(row.cad_data_hora_fim <= moment().format('YYYY-MM-DD HH:MM:SS')){
+                    return true;
+                }
+
+                return false;
+            },
+
+            resetAulas() {
                 let self = this;
 
-                self.usuarios = [];
+                self.aulas = [];
             }
         }
     }

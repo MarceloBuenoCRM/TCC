@@ -18,13 +18,13 @@ class CreateAulasTable extends Migration
             $table->string('cad_disciplina');
             $table->string('cad_curso');
             $table->string('cad_periodo');
-            $table->string('cad_num_sala');
+            $table->integer('cad_num_sala');
             $table->string('cad_bloco');
-            $table->string('cad_data_hora_inicio');
-            $table->string('cad_data_hora_fim');
-            $table->string('cad_tempo_minimo');
-            $table->string('cad_tempo_tolerancia');
-            $table->string('id_professor');
+            $table->dateTime('cad_data_hora_inicio');
+            $table->dateTime('cad_data_hora_fim');
+            $table->integer('cad_tempo_minimo');
+            $table->integer('cad_tempo_tolerancia');
+            $table->integer('id_professor');
             $table->timestamps();
         });
     }
