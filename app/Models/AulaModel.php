@@ -18,7 +18,7 @@ class AulaModel extends Model
 
     public static function boot() {
         parent::boot();
-    
+
         static::creating(function ($model) {
             $model->id_professor = Auth::user()->id;
         });
@@ -27,7 +27,7 @@ class AulaModel extends Model
     public function index($params)
     {
         $query = $this->select("*")
-                      ->orderBy('cad_data_hora_inicio');
+                      ->orderBy('cad_data_hora_inicio', 'DESC');
 
         $query = $this->filter($query, $params);
 
