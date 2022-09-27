@@ -55901,6 +55901,7 @@ a.text-muted:hover {
     border-color: #3f6791 !important;
 }
 
+.dark-mode .el-textarea__inner,
 .dark-mode .el-picker-panel,
 .dark-mode .el-picker-panel__footer,
 .dark-mode .el-picker-panel__footer button{
@@ -55913,6 +55914,7 @@ a.text-muted:hover {
     background-color: #454D55;
 }
 
+.dark-mode .el-textarea__inner,
 .dark-mode .el-picker-panel__icon-btn,
 .dark-mode .el-picker-panel__icon-btn,
 .dark-mode .el-date-picker__header-label,

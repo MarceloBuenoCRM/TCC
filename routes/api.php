@@ -35,5 +35,8 @@ Route::middleware('auth:sanctum')->group(function() {
         /* Aula */
         Route::resource('aula', 'App\Http\Controllers\AulaController', ['parameters' => ['' => 'id']]);
         Route::get('aulas_reservadas', 'App\Http\Controllers\AulaController@getClassDay');
+
+        /* Intervencao */
+        Route::resource('intervencao', 'App\Http\Controllers\IntervencaoController', ['parameters' => ['' => 'id']]);
     });
 });

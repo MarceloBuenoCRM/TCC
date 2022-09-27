@@ -8,7 +8,7 @@
                         {{$t('message.sistema')}}
                     </a>
                 </li>
-                <li class="breadcrumb-item active">{{$tc('message.usuario', 2)}}</li>
+                <li class="breadcrumb-item active">Intervenção</li>
             </ol>
         </div>
 
@@ -18,7 +18,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6 content_index">
-                                <h1 class="m-0">{{$tc('message.usuario', 2)}}</h1>
+                                <h1 class="m-0">Intervenção</h1>
                             </div>
                         </div>
 
@@ -47,20 +47,42 @@
                                         </div>
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
-                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
-                                            <el-form-item :label="$tc('message.nome', 1)" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                <el-input v-model="form.cad_nome" clearable></el-input>
-                                            </el-form-item>
+                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm"
+                                            @submit.native.prevent="submitForm()" id="formIndexIntervencao">
+                                            <div class="row">
+                                                <el-form-item label="Data" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_data">
+                                                    <el-date-picker v-model="form.cad_data" type="datetime"
+                                                        format="dd/MM/yyyy" value-format="yyyy-MM-dd"
+                                                        v-mask="'##/##/#### ##:##:##'" clearable>
+                                                    </el-date-picker>
+                                                </el-form-item>
+
+                                                <el-form-item label="Curso" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_curso">
+                                                    <el-input v-model="form.cad_curso" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item label="Aluno" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_aluno">
+                                                    <el-input v-model="form.cad_aluno" clearable></el-input>
+                                                </el-form-item>
+
+                                                <el-form-item label="Professor" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_professor">
+                                                    <el-input v-model="form.cad_professor" clearable></el-input>
+                                                </el-form-item>
+                                            </div>
                                         </el-form>
                                     </div>
                                     <div class="card-footer card_footer_index">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexUsuario">
+                                            <button native-type="submit" class="btn btn-primary btn-sm"
+                                                form="formIndexIntervencao">
                                                 <i class="fas fa-search"></i>
                                                 {{$t('message.buscar')}}
                                             </button>
-                                            <button type="button" class="btn btn-light btn-sm"
-                                            @click="resetForm()">
+                                            <button type="button" class="btn btn-light btn-sm" @click="resetForm()">
                                                 <i class="fas fa-undo"></i>
                                                 {{$t('message.limpar')}}
                                             </button>
@@ -68,30 +90,49 @@
                                     </div>
                                 </div>
 
-                                <el-table :data="usuarios" style="width: 100%" tooltip-effect="dark" stripe>
-                                    <el-table-column prop="id" :label="$t('message.id')" width="120px" show-overflow-tooltip>
+                                <el-table :data="intervencao" style="width: 100%" tooltip-effect="dark" stripe>
+                                    <el-table-column prop="id" :label="$t('message.id')" width="120px"
+                                        show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" :label="$tc('message.nome', 2)" show-overflow-tooltip>
+                                    <el-table-column prop="cad_aluno" label="Aluno" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_email" :label="$t('message.email')" show-overflow-tooltip>
+                                    <el-table-column prop="cad_curso" label="Curso" show-overflow-tooltip>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_data" label="Data" show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            {{formatDate(scope.row.cad_data)}}
+                                        </template>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_aprovado" label="Status" show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            {{scope.row.cad_aprovado}}
+                                        </template>
+                                    </el-table-column>
+
+                                    <el-table-column prop="cad_professor" label="Professor" show-overflow-tooltip>
                                     </el-table-column>
 
                                     <el-table-column label="Funções" align="center">
                                         <template slot-scope="scope">
-                                            <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)" :title="$t('message.editar')">
+                                            <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)"
+                                                :title="$t('message.editar')">
                                                 <i class="fas fa-edit" style="color:#0085fa;"></i>
                                             </a>
 
-                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)" :title="$t('message.excluir')">
+                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)"
+                                                :title="$t('message.excluir')">
                                                 <i class="fas fa-trash-alt" style="color:#f00;"></i>
                                             </a>
                                         </template>
                                     </el-table-column>
                                 </el-table>
 
-                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page" :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
+                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page"
+                                    :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
                                 </pagination>
                             </div>
                         </div>
@@ -104,9 +145,9 @@
 </template>
 
 <script>
-    import modalForm  from './modalForm';
-    import funcoes    from '../../../../../components/mixins/funcoes';
-    import notify     from '../../../../../components/mixins/notify.js';
+    import modalForm from './modalForm';
+    import funcoes from '../../../../../components/mixins/funcoes';
+    import notify from '../../../../../components/mixins/notify.js';
     import pagination from '../../../../../components/partials/simplePagination.vue';
 
     export default {
@@ -118,11 +159,13 @@
         data() {
             return {
                 form: {
-                    cad_nome: '',
-                    per_page: 5,
+                    cad_data     : '',
+                    cad_curso    : '',
+                    cad_aluno    : '',
+                    cad_professor: ''
                 },
                 url        : '',
-                usuarios   : [],
+                intervencao: [],
                 edit       : false,
                 next_page  : false,
                 prev_page  : false,
@@ -147,10 +190,10 @@
                 self.$refs.modalForm.show();
             },
 
-            delete(id_usuario) {
+            delete(id_intervencao) {
                 let self = this;
 
-                axios.delete('/sistema/usuario/' + id_usuario)
+                axios.delete('/sistema/intervencao/' + id_intervencao)
                     .then(function () {
                         self.submitForm();
                         self.notifyDelete();
@@ -169,10 +212,10 @@
             searchForm(page, page_size) {
                 let self = this;
 
-                self.resetUsuarios();
+                self.resetIntervencao();
                 self.form.per_page = page_size;
                 self.form.page     = page;
-                self.url           = self.mountUrl('/sistema/usuario?', self.form);
+                self.url           = self.mountUrl('/sistema/intervencao?', self.form);
 
                 axios.get(self.url)
                     .then(function (response) {
@@ -180,18 +223,19 @@
                         self.form.per_page = parseInt(response.data.data.per_page);
                         self.next_page     = Boolean(response.data.data.next_page_url);
                         self.prev_page     = Boolean(response.data.data.prev_page_url);
-                        self.usuarios      = self.mountDataTable(response.data.data.data);
+                        self.intervencao   = self.mountDataTable(response.data.data.data);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-            resetUsuarios() {
+            resetIntervencao() {
                 let self = this;
 
-                self.usuarios = [];
+                self.intervencao = [];
             }
         }
     }
+
 </script>
