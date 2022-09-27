@@ -1,5 +1,8 @@
 <template>
-    <div class="d-flex flex-column">
+    <div class="google-map">
+
+    </div>
+    <!-- <div class="d-flex flex-column">
         <div class="content-header col-sm-6 breadcrumb_index">
             <ol class="breadcrumb float-sm-left">
                 <li class="breadcrumb-item">
@@ -21,7 +24,6 @@
                     </div>
                     <div class="container-fluid" style="display: flex">
                         <div class="col-lg-4 col-sm-4" v-for="item in aulas_reservadas" :key="item.id">
-                            <!-- small box -->
                             <div class="small-box"
                                 :class="{'bg-info': aguardando(item), 'bg-success': liberaAula(item), 'bg-danger': !liberaAula(item) && !aguardando(item)}">
                                 <div class="inner">
@@ -55,6 +57,8 @@
                                 <button @click="startTimer(duration)">Continuar</button>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -69,7 +73,7 @@
                 </el-result>
             </div>
         </el-dialog>
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -79,6 +83,7 @@
     export default {
         data() {
             return {
+                map             : null,
                 url             : '',
                 cron            : '',
                 text            : '',
@@ -96,7 +101,15 @@
         mixins: [funcoes, notify],
 
         mounted() {
-            this.submitForm();
+            let self = this;
+
+            self.submitForm();
+
+            self.map = new google.maps.Map(self.$el, {
+                zoom: 4,
+                center: new google.maps.LatLng(-14, -55),
+                mapTypeId: "terrain",
+            });
         },
 
         methods: {
@@ -141,7 +154,7 @@
                 self.aulas_reservadas = [];
             },
 
-            verificaLocalizacao(cad_tempo_minimo){
+            verificaLocalizacao(cad_tempo_minimo) {
                 this.modal = true;
                 this.loading = true;
 
@@ -156,7 +169,7 @@
             },
 
             start(timer) {
-                var duration = 60 * timer;  // Converter para segundos
+                var duration = 60 * timer; // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration); // iniciando o timer
             },
@@ -165,26 +178,26 @@
                 clearInterval(this.cron)
             },
 
-            resetCronometro(){
+            resetCronometro() {
                 clearInterval(this.cron)
                 this.duration = null
-                this.timer    = {
+                this.timer = {
                     minutes: 0,
                     seconds: 0
                 }
             },
 
             startTimer(duration) {
-                let self  = this;
+                let self = this;
                 let timer = duration
 
                 self.cron = setInterval(function () {
                     self.timer.minutes = parseInt(timer / 60, 10);
                     self.timer.seconds = parseInt(timer % 60, 10);
                     self.timer.minutes = self.timer.minutes < 10 ? "0" + self.timer.minutes : self.timer
-                    .minutes;
+                        .minutes;
                     self.timer.seconds = self.timer.seconds < 10 ? "0" + self.timer.seconds : self.timer
-                    .seconds;
+                        .seconds;
                     self.text = self.timer.minutes + ":" + self.timer.seconds;
 
                     if (--timer < 0) {
@@ -211,4 +224,10 @@
         position: static !important;
     }
 
+    .google-map {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
 </style>

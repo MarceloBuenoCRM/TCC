@@ -21,13 +21,6 @@
                                 <h1 class="m-0">Intervenção</h1>
                             </div>
                         </div>
-
-                        <div class="row mb-2 button_index">
-                            <button type="button" class="btn btn-primary btn-sm" @click="openModal()">
-                                <i class="fas fa-plus"></i>
-                                {{$t('message.novo')}}
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -121,11 +114,6 @@
                                             <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)"
                                                 :title="$t('message.editar')">
                                                 <i class="fas fa-edit" style="color:#0085fa;"></i>
-                                            </a>
-
-                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)"
-                                                :title="$t('message.excluir')">
-                                                <i class="fas fa-trash-alt" style="color:#f00;"></i>
                                             </a>
                                         </template>
                                     </el-table-column>

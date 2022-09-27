@@ -1,6 +1,7 @@
 <template>
-    <el-dialog :title="edit == true ? $t('message.edit', {msg:  'Intervenção'}) : $t('message.add', {msg:  'Intervenção'})" :visible.sync="dialogVisible"
-        :before-close="closeModalForm" append-to-body>
+    <el-dialog
+        :title="edit == true ? $t('message.edit', {msg:  'Intervenção'}) : $t('message.add', {msg:  'Intervenção'})"
+        :visible.sync="dialogVisible" :before-close="closeModalForm" append-to-body>
         <div class="card card-gray-custom">
             <div class="card-header">
                 <h3 class="card-title">
@@ -13,15 +14,16 @@
                 </div>
             </div>
             <div class="card-body">
-                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
+                <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm"
+                    @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
                         <el-form-item label="Aluno" class="col-sm-12 col-md-12" size="mini" prop="cad_aluno">
                             <el-input v-model="form.cad_aluno" clearable disabled></el-input>
                         </el-form-item>
 
-                        <el-form-item label="Data" class="col-sm-12 col-md-6"
-                            size="mini" prop="cad_data">
-                            <el-date-picker v-model="form.cad_data" type="datetime" format="dd/MM/yyyy" value-format="yyyy-MM-dd" v-mask="'##/##/#### ##:##:##'" clearable disabled>
+                        <el-form-item label="Data" class="col-sm-12 col-md-6" size="mini" prop="cad_data">
+                            <el-date-picker v-model="form.cad_data" type="datetime" format="dd/MM/yyyy"
+                                value-format="yyyy-MM-dd" v-mask="'##/##/#### ##:##:##'" clearable disabled>
                             </el-date-picker>
                         </el-form-item>
 
@@ -44,8 +46,8 @@
 
                         <el-form-item label="Aprovado" class="col-sm-12 col-md-12" size="mini" prop="cad_aprovado">
                             <el-radio-group v-model="form.cad_aprovado">
-                                <el-radio :label="0">Sim</el-radio>
-                                <el-radio :label="1">Não</el-radio>
+                                <el-radio :label="1">Sim</el-radio>
+                                <el-radio :label="0">Não</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </div>
@@ -66,8 +68,8 @@
 </template>
 
 <script>
-    import funcoes     from '../../../../../components/mixins/funcoes';
-    import notify      from '../../../../../components/mixins/notify';
+    import funcoes from '../../../../../components/mixins/funcoes';
+    import notify from '../../../../../components/mixins/notify';
     import modalMixins from '../../../../../components/mixins/modalMixins';
 
     export default {
@@ -90,36 +92,45 @@
                 rules: {
                     cad_data: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: 'Data'}),
-                        trigger : "change",
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Data'
+                        }),
+                        trigger: "change",
                     }],
                     cad_motivo: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: 'Motivo'}),
-                            trigger : "change",
-                        }
-                    ],
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Motivo'
+                        }),
+                        trigger: "change",
+                    }],
                     cad_professor: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: 'Professor'}),
-                            trigger : "change",
-                        }
-                    ],
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Professor'
+                        }),
+                        trigger: "change",
+                    }],
                     cad_disciplina: [{
-                            required: true,
-                            message : this.$t('message.rules.campo_obrigatorio', {msg: 'Disciplina'}),
-                            trigger : "change",
-                        }
-                    ],
+                        required: true,
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Disciplina'
+                        }),
+                        trigger: "change",
+                    }],
                     cad_aluno: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: 'Aluno'}),
-                        trigger : "change",
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Aluno'
+                        }),
+                        trigger: "change",
                     }],
                     cad_curso: [{
                         required: true,
-                        message : this.$t('message.rules.campo_obrigatorio', {msg: 'Curso'}),
-                        trigger : "change",
+                        message : this.$t('message.rules.campo_obrigatorio', {
+                            msg: 'Curso'
+                        }),
+                        trigger: "change",
                     }],
                 },
                 errors: []
@@ -140,29 +151,16 @@
 
                     self.clearError();
 
-                    if (self.edit == true) {
-                        axios.put('/sistema/intervencao/' + self.form.id, self.form)
-                            .then(function () {
-                                self.notifyEdit();
-                                self.$emit('loadData');
-                                self.closeModal();
-                            })
-                            .catch(function (error) {
-                                self.errors = error.response.data.errors ?? [];
-                                self.notifyErrorValidation();
-                            })
-                    } else {
-                        axios.post('/sistema/intervencao', self.form)
-                            .then(function () {
-                                self.notifyAdd();
-                                self.$emit('loadData');
-                                self.closeModal();
-                            })
-                            .catch(function (error) {
-                                self.errors = error.response.data.errors ?? [];
-                                self.notifyErrorValidation();
-                            })
-                    }
+                    axios.put('/sistema/intervencao/' + self.form.id, self.form)
+                        .then(function () {
+                            self.notifyEdit();
+                            self.$emit('loadData');
+                            self.closeModal();
+                        })
+                        .catch(function (error) {
+                            self.errors = error.response.data.errors ?? [];
+                            self.notifyErrorValidation();
+                        })
                 })
             },
 
@@ -186,4 +184,5 @@
             }
         }
     }
+
 </script>

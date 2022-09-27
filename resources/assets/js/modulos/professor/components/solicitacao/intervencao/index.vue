@@ -112,7 +112,9 @@
 
                                     <el-table-column prop="cad_aprovado" label="Status" show-overflow-tooltip>
                                         <template slot-scope="scope">
-                                            {{scope.row.cad_aprovado}}
+                                            <el-tag type="warning" v-if="!scope.row.cad_aprovado">AGUARDANDO</el-tag>
+                                            <el-tag type="danger" v-else-if="scope.row.cad_aprovado == 0">REPROVADO</el-tag>
+                                            <el-tag type="success" v-else-if="scope.row.cad_aprovado == 1">APROVADO</el-tag>
                                         </template>
                                     </el-table-column>
 
