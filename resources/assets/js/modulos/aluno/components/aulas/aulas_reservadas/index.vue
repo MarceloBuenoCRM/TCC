@@ -1,8 +1,5 @@
 <template>
-    <div class="google-map">
-
-    </div>
-    <!-- <div class="d-flex flex-column">
+    <div class="d-flex flex-column">
         <div class="content-header col-sm-6 breadcrumb_index">
             <ol class="breadcrumb float-sm-left">
                 <li class="breadcrumb-item">
@@ -58,7 +55,16 @@
                             </div>
                         </div>
 
-
+                        <div id="map_area">
+                            <div id="note">
+                                <span id="title">&raquo;Inside the circle?&laquo;</span>
+                                <hr />
+                                <span class="info">Marker <strong>A</strong>:
+                                    <span id="a" class="bool"></span>
+                                </span>
+                            </div>
+                            <div id="map"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                 </el-result>
             </div>
         </el-dialog>
-    </div> -->
+    </div>
 </template>
 
 <script>
@@ -104,15 +110,74 @@
             let self = this;
 
             self.submitForm();
-
-            self.map = new google.maps.Map(self.$el, {
-                zoom: 4,
-                center: new google.maps.LatLng(-14, -55),
-                mapTypeId: "terrain",
-            });
+            self.startMap();
         },
 
         methods: {
+            startMap() {
+                var contentCenter = '<span class="infowin">Sala de aula 11</span>'
+                var contentA      = '<span class="infowin">Marker A (draggable)</span>'
+
+                var latLngCenter  = new google.maps.LatLng(-22.394192, -47.5812358)
+                var latLngCMarker = new google.maps.LatLng(-22.394192, -47.5812358)
+                var latLngA       = new google.maps.LatLng(37.2, -94.1)
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom          : 20,
+                    center        : latLngCenter,
+                    mapTypeId     : 'terrain',
+                    mapTypeControl: false
+                })
+
+                var markerCenter = new google.maps.Marker({
+                    position: latLngCMarker,
+                    title   : 'Location',
+                    map     : map
+                })
+
+                var infoCenter = new google.maps.InfoWindow({
+                    content: contentCenter
+                })
+
+                var markerA = new google.maps.Marker({
+                    position : latLngA,
+                    title    : 'Location',
+                    map      : map,
+                    draggable: true
+                })
+
+                var infoA = new google.maps.InfoWindow({
+                    content: contentA
+                })
+
+                var circle = new google.maps.Circle({
+                    map      : map,
+                    clickable: false,
+                    // metres
+                    radius       : 2,
+                    fillColor    : '#fff',
+                    fillOpacity  : .6,
+                    strokeColor  : '#313131',
+                    strokeOpacity: .4,
+                    strokeWeight : .8
+                })
+
+                circle.bindTo('center', markerCenter, 'position');
+
+                var bounds = circle.getBounds()
+                var noteA  = jQuery('.bool#a')
+
+                noteA.text(bounds.contains(latLngA));
+
+                google.maps.event.addListener(markerCenter, 'click', function () {
+                    infoCenter.open(map, markerCenter);
+                });
+
+                google.maps.event.addListener(markerA, 'click', function () {
+                    infoA.open(map, markerA);
+                });
+            },
+
             aguardando(item) {
                 let now = moment().format('YYYY-MM-DD HH:mm:ss')
 
@@ -155,7 +220,7 @@
             },
 
             verificaLocalizacao(cad_tempo_minimo) {
-                this.modal = true;
+                this.modal   = true;
                 this.loading = true;
 
                 setTimeout(() => {
@@ -169,7 +234,7 @@
             },
 
             start(timer) {
-                var duration = 60 * timer; // Converter para segundos
+                var duration = 60 * timer;  // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration); // iniciando o timer
             },
@@ -181,14 +246,14 @@
             resetCronometro() {
                 clearInterval(this.cron)
                 this.duration = null
-                this.timer = {
+                this.timer    = {
                     minutes: 0,
                     seconds: 0
                 }
             },
 
             startTimer(duration) {
-                let self = this;
+                let self  = this;
                 let timer = duration
 
                 self.cron = setInterval(function () {
@@ -224,10 +289,44 @@
         position: static !important;
     }
 
-    .google-map {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
+    #map_area{
+        height: 50%;
+        width : 30%;
     }
+
+    #map {
+        position   : absolute;
+        height     : 100%;
+        width      : 29%;
+        font-family: Arial, sans-serif;
+        font-size  : .9em;
+        color      : #fff;
+    }
+
+    #note {
+        text-align: center;
+        padding   : .3em;
+        background: #009ee0;
+    }
+
+    .bool {
+        font-style: italic;
+        color     : #313131;
+    }
+
+    .info {
+        display   : inline-block;
+        width     : 40%;
+        text-align: center;
+    }
+
+    .infowin {
+        color: #313131;
+    }
+
+    #title,
+    .bool {
+        font-weight: bold;
+    }
+
 </style>

@@ -46,7 +46,7 @@
     <script src="/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/js/adminlte.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPGaoCRdROJDXsAO8jagWFPJctUitHz_w&libraries=drawing,geometry"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHjBHD-iopIerml-Xw-G4boNk7GoMATRE"></script>
     @yield('script_vue')
 </body>
 
