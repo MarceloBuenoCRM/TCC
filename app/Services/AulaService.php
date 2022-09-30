@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AulaModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AulaService
 {
@@ -43,6 +44,11 @@ class AulaService
     {
         $initialDate = Carbon::now()->format('Y-m-d 00:00:00');
         $lastDate    = Carbon::now()->addDay(1)->format('Y-m-d 00:00:00');
-        return AulaModel::select('*')->whereBetween('cad_data_hora_inicio', [$initialDate, $lastDate]);
+        $rows = DB::table('aulas')
+                      ->select('aulas.*', 'salas.cad_latitude', 'salas.cad_longitude', 'salas.cad_diametro')
+                      ->join('salas', 'salas.id', 'aulas.cad_num_sala')
+                      ->whereBetween('cad_data_hora_inicio', [$initialDate, $lastDate])
+                      ->orderBy('cad_data_hora_inicio', 'DESC');
+        return $rows;
     }
 }

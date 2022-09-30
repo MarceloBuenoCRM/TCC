@@ -45,7 +45,7 @@
                                     <i class="fas fa-school"></i>
                                 </div>
                                 <a href="#" class="small-box-footer" v-if="liberaAula(item)"
-                                    @click="verificaLocalizacao(item.cad_tempo_minimo)">
+                                    @click="verificaLocalizacao(item)">
                                     Confirmar Presença
                                     <i class="fas fa-arrow-circle-right"></i>
                                 </a>
@@ -57,7 +57,7 @@
 
                         <div id="map_area">
                             <div id="note">
-                                <span id="title">&raquo;Inside the circle?&laquo;</span>
+                                <span id="title">&raquo;Tempo Mínimo: {{text}}&laquo;</span>
                                 <hr />
                                 <span class="info">Marker <strong>A</strong>:
                                     <span id="a" class="bool"></span>
@@ -100,7 +100,18 @@
                 timer           : {
                     minutes: 0,
                     seconds: 0
-                }
+                },
+                latLngCenter: null,
+                latLngCMarker: null,
+                latLngA: null,
+                map: null,
+                markerCenter: null,
+                infoCenter: null,
+                markerA: null,
+                infoA: null,
+                circle: null,
+                bounds: null,
+                item: {}
             }
         },
 
@@ -110,72 +121,95 @@
             let self = this;
 
             self.submitForm();
-            self.startMap();
         },
 
         methods: {
+            success(position){
+                this.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                this.startMap();
+            },
+
             startMap() {
-                var contentCenter = '<span class="infowin">Sala de aula 11</span>'
-                var contentA      = '<span class="infowin">Marker A (draggable)</span>'
+                let self = this;
 
-                var latLngCenter  = new google.maps.LatLng(-22.394192, -47.5812358)
-                var latLngCMarker = new google.maps.LatLng(-22.394192, -47.5812358)
-                var latLngA       = new google.maps.LatLng(37.2, -94.1)
+                var contentCenter = '<span class="infowin">Sala de aula ' + self.item.cad_num_sala + '</span>'
+                var contentA      = '<span class="infowin">Eu</span>'
 
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom          : 20,
-                    center        : latLngCenter,
+                self.latLngCenter  = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
+                self.latLngCMarker = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
+
+                self.map = new google.maps.Map(document.getElementById('map'), {
+                    zoom          : 25,
+                    center        : self.latLngCenter,
                     mapTypeId     : 'terrain',
                     mapTypeControl: false
                 })
 
-                var markerCenter = new google.maps.Marker({
-                    position: latLngCMarker,
+                self.markerCenter = new google.maps.Marker({
+                    position: self.latLngCMarker,
                     title   : 'Location',
-                    map     : map
+                    map     : self.map
                 })
 
-                var infoCenter = new google.maps.InfoWindow({
+                self.infoCenter = new google.maps.InfoWindow({
                     content: contentCenter
                 })
 
-                var markerA = new google.maps.Marker({
-                    position : latLngA,
+                self.markerA = new google.maps.Marker({
+                    position : self.latLngA,
                     title    : 'Location',
-                    map      : map,
+                    map      : self.map,
                     draggable: true
                 })
 
-                var infoA = new google.maps.InfoWindow({
+                self.infoA = new google.maps.InfoWindow({
                     content: contentA
                 })
 
-                var circle = new google.maps.Circle({
-                    map      : map,
+                self.startCircle()
+
+                self.circle.bindTo('center', self.markerCenter, 'position');
+
+                self.bounds = self.circle.getBounds()
+                var noteA  = jQuery('.bool#a')
+
+                noteA.text(self.bounds.contains(self.latLngA));
+
+                // if(self.bounds.contains(self.latLngA) == true){
+                //     this.isValido = true;
+                //     setTimeout(() => {
+                //         this.start(item.cad_tempo_minimo)
+                //         this.modal = false;
+                //     }, 2000);
+                // }else{
+                //     this.isValido = false
+                // }
+                // this.modal = false;
+                // this.loading = false;
+
+                google.maps.event.addListener(self.markerCenter, 'click', function () {
+                    self.infoCenter.open(self.map, self.markerCenter);
+                });
+
+                google.maps.event.addListener(self.markerA, 'click', function () {
+                    self.infoA.open(self.map, self.markerA);
+                });
+            },
+
+            startCircle(){
+                let self = this;
+
+                self.circle = new google.maps.Circle({
+                    map      : self.map,
                     clickable: false,
                     // metres
-                    radius       : 2,
+                    radius       : self.item.cad_diametro / 2,
                     fillColor    : '#fff',
                     fillOpacity  : .6,
                     strokeColor  : '#313131',
                     strokeOpacity: .4,
                     strokeWeight : .8
                 })
-
-                circle.bindTo('center', markerCenter, 'position');
-
-                var bounds = circle.getBounds()
-                var noteA  = jQuery('.bool#a')
-
-                noteA.text(bounds.contains(latLngA));
-
-                google.maps.event.addListener(markerCenter, 'click', function () {
-                    infoCenter.open(map, markerCenter);
-                });
-
-                google.maps.event.addListener(markerA, 'click', function () {
-                    infoA.open(map, markerA);
-                });
             },
 
             aguardando(item) {
@@ -219,18 +253,12 @@
                 self.aulas_reservadas = [];
             },
 
-            verificaLocalizacao(cad_tempo_minimo) {
-                this.modal   = true;
-                this.loading = true;
-
-                setTimeout(() => {
-                    this.loading = false;
-                }, 1000);
-
-                setTimeout(() => {
-                    this.start(cad_tempo_minimo)
-                    this.modal = false;
-                }, 5000);
+            verificaLocalizacao(item) {
+                // this.modal   = true;
+                // this.loading = true;
+                this.item    = item
+                this.start(item.cad_tempo_minimo)
+                navigator.geolocation.getCurrentPosition(this.success)
             },
 
             start(timer) {
@@ -290,13 +318,13 @@
     }
 
     #map_area{
-        height: 50%;
+        height: 30%;
         width : 30%;
     }
 
     #map {
         position   : absolute;
-        height     : 100%;
+        height     : 52%;
         width      : 29%;
         font-family: Arial, sans-serif;
         font-size  : .9em;
@@ -315,9 +343,9 @@
     }
 
     .info {
-        display   : inline-block;
-        width     : 40%;
-        text-align: center;
+        display         : inline-block;
+        width           : 40%;
+        text-align      : center;
     }
 
     .infowin {

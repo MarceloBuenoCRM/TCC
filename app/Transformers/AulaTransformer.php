@@ -18,6 +18,9 @@ class AulaTransformer
             $value->cad_tempo_minimo     = (int)$value->cad_tempo_minimo;
             $value->cad_tempo_tolerancia = (int)$value->cad_tempo_tolerancia;
             $value->id_professor         = (int)$value->id_professor;
+            $value->cad_latitude         = (float)$value->cad_latitude;
+            $value->cad_longitude        = (float)$value->cad_longitude;
+            $value->cad_diametro         = (int)$value->cad_diametro;
             $value->dsc_professor        = (string) \Auth::user()->cad_nome;
             return $value;
         });
