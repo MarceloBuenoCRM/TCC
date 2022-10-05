@@ -55,13 +55,11 @@
                             </div>
                         </div>
 
-                        <div id="map_area">
+                        <div id="map_area" v-show="isValido == true">
                             <div id="note">
-                                <span id="title">&raquo;Tempo Mínimo: {{text}}&laquo;</span>
+                                <span id="title" style="color: white">&raquo;Tempo Mínimo: {{text}}&laquo;</span>
                                 <hr />
-                                <span class="info">Marker <strong>A</strong>:
-                                    <span id="a" class="bool"></span>
-                                </span>
+                                <span id="title" style="color: red">&raquo;Tempo Tolerância: {{text}}&laquo;</span>
                             </div>
                             <div id="map"></div>
                         </div>
@@ -72,10 +70,10 @@
 
         <el-dialog :visible.sync="modal" :show-close="false" fullscreen>
             <div v-loading="loading" element-loading-text="Confirmando sua localização...">
-                <el-result icon="success" title="Sucesso" subTitle="Localização Válida!" v-if="!loading">
+                <el-result icon="success" title="Sucesso" subTitle="Localização Válida!" v-if="isValido == true && loading == false">
                 </el-result>
 
-                <el-result icon="error" title="Atenção" subTitle="Localização Inválida!">
+                <el-result icon="error" title="Atenção" subTitle="Localização Inválida. Vá para a sala de aula e tente novamente!" v-else-if="isValido == false && loading == false">
                 </el-result>
             </div>
         </el-dialog>
@@ -89,15 +87,15 @@
     export default {
         data() {
             return {
-                map             : null,
-                url             : '',
-                cron            : '',
-                text            : '',
+                map: null,
+                url: '',
+                cron: '',
+                text: '',
                 aulas_reservadas: [],
-                duration        : null,
-                modal           : false,
-                loading         : false,
-                timer           : {
+                duration: null,
+                modal: false,
+                loading: false,
+                timer: {
                     minutes: 0,
                     seconds: 0
                 },
@@ -111,6 +109,7 @@
                 infoA: null,
                 circle: null,
                 bounds: null,
+                isValido: null,
                 item: {}
             }
         },
@@ -124,31 +123,26 @@
         },
 
         methods: {
-            success(position){
-                this.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-                this.startMap();
-            },
-
             startMap() {
                 let self = this;
 
                 var contentCenter = '<span class="infowin">Sala de aula ' + self.item.cad_num_sala + '</span>'
-                var contentA      = '<span class="infowin">Eu</span>'
+                var contentA = '<span class="infowin">Eu</span>'
 
-                self.latLngCenter  = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
+                self.latLngCenter = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
                 self.latLngCMarker = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
 
                 self.map = new google.maps.Map(document.getElementById('map'), {
-                    zoom          : 25,
-                    center        : self.latLngCenter,
-                    mapTypeId     : 'terrain',
+                    zoom: 25,
+                    center: self.latLngCenter,
+                    mapTypeId: 'terrain',
                     mapTypeControl: false
                 })
 
                 self.markerCenter = new google.maps.Marker({
                     position: self.latLngCMarker,
-                    title   : 'Location',
-                    map     : self.map
+                    title: 'Location',
+                    map: self.map
                 })
 
                 self.infoCenter = new google.maps.InfoWindow({
@@ -156,10 +150,9 @@
                 })
 
                 self.markerA = new google.maps.Marker({
-                    position : self.latLngA,
-                    title    : 'Location',
-                    map      : self.map,
-                    draggable: true
+                    position: self.latLngA,
+                    title: 'Location',
+                    map: self.map
                 })
 
                 self.infoA = new google.maps.InfoWindow({
@@ -167,25 +160,31 @@
                 })
 
                 self.startCircle()
-
-                self.circle.bindTo('center', self.markerCenter, 'position');
-
+                self.circle.bindTo('center', self.markerCenter, 'position')
                 self.bounds = self.circle.getBounds()
-                var noteA  = jQuery('.bool#a')
 
-                noteA.text(self.bounds.contains(self.latLngA));
+                var noteA = jQuery('.bool#a')
+                noteA.text(self.verificaArea())
 
-                // if(self.bounds.contains(self.latLngA) == true){
-                //     this.isValido = true;
-                //     setTimeout(() => {
-                //         this.start(item.cad_tempo_minimo)
-                //         this.modal = false;
-                //     }, 2000);
-                // }else{
-                //     this.isValido = false
-                // }
-                // this.modal = false;
-                // this.loading = false;
+                if (self.bounds.contains(self.latLngA) == true) {
+                    this.isValido = true;
+                    navigator.geolocation.watchPosition(this.watchPosition, this.error, {
+                        enableHighAccuracy: true, maximumAge: 30000, timeout: 3000
+                    })
+                    setTimeout(() => {
+                        this.start(self.item.cad_tempo_minimo)
+                    }, 2000);
+                } else {
+                    this.isValido = false;
+                }
+
+                setTimeout(() => {
+                    this.loading = false;
+                }, 2000);
+
+                setTimeout(() => {
+                    this.modal = false;
+                }, 6000);
 
                 google.maps.event.addListener(self.markerCenter, 'click', function () {
                     self.infoCenter.open(self.map, self.markerCenter);
@@ -196,20 +195,54 @@
                 });
             },
 
-            startCircle(){
+            startCircle() {
                 let self = this;
 
                 self.circle = new google.maps.Circle({
-                    map      : self.map,
+                    map: self.map,
                     clickable: false,
                     // metres
-                    radius       : self.item.cad_diametro / 2,
-                    fillColor    : '#fff',
-                    fillOpacity  : .6,
-                    strokeColor  : '#313131',
+                    radius: self.item.cad_diametro / 2,
+                    fillColor: '#fff',
+                    fillOpacity: .6,
+                    strokeColor: '#313131',
                     strokeOpacity: .4,
-                    strokeWeight : .8
+                    strokeWeight: .8
                 })
+            },
+
+            verificaArea(){
+                let self = this;
+
+                return self.bounds.contains(self.latLngA)
+            },
+
+            verificaLocalizacao(item) {
+                this.modal = true;
+                this.loading = true;
+                this.item = item
+
+                navigator.geolocation.getCurrentPosition(this.currentPosition)
+            },
+
+            currentPosition(position) {
+                this.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                this.startMap();
+            },
+
+            watchPosition(position) {
+                this.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+
+                this.markerA.setPosition(this.latLngA)
+
+                console.log(this.verificaArea())
+                if(this.verificaArea() == false){
+                    this.pause()
+                }
+
+                if(this.cron == ''){
+                    this.startTimer(this.duration)
+                }
             },
 
             aguardando(item) {
@@ -253,16 +286,8 @@
                 self.aulas_reservadas = [];
             },
 
-            verificaLocalizacao(item) {
-                // this.modal   = true;
-                // this.loading = true;
-                this.item    = item
-                this.start(item.cad_tempo_minimo)
-                navigator.geolocation.getCurrentPosition(this.success)
-            },
-
-            start(timer) {
-                var duration = 60 * timer;  // Converter para segundos
+            start() {
+                var duration = 60 * 1; // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration); // iniciando o timer
             },
@@ -274,14 +299,14 @@
             resetCronometro() {
                 clearInterval(this.cron)
                 this.duration = null
-                this.timer    = {
+                this.timer = {
                     minutes: 0,
                     seconds: 0
                 }
             },
 
             startTimer(duration) {
-                let self  = this;
+                let self = this;
                 let timer = duration
 
                 self.cron = setInterval(function () {
@@ -294,6 +319,7 @@
                     self.text = self.timer.minutes + ":" + self.timer.seconds;
 
                     if (--timer < 0) {
+                        //IMPLEMENTAR TABELA PRESENCA
                         timer = duration;
                     }
 
@@ -317,39 +343,39 @@
         position: static !important;
     }
 
-    #map_area{
+    #map_area {
         height: 30%;
-        width : 30%;
+        width: 30%;
     }
 
     #map {
-        position   : absolute;
-        height     : 52%;
-        width      : 29%;
+        position: absolute;
+        height: 52%;
+        width: 29%;
         font-family: Arial, sans-serif;
-        font-size  : .9em;
-        color      : #fff;
+        font-size: .9em;
+        color: #fff;
     }
 
     #note {
         text-align: center;
-        padding   : .3em;
-        background: #009ee0;
+        padding: .3em;
+        background: #000000;
     }
 
     .bool {
         font-style: italic;
-        color     : #313131;
+        color: #ffffff;
     }
 
     .info {
-        display         : inline-block;
-        width           : 40%;
-        text-align      : center;
+        display: inline-block;
+        width: 40%;
+        text-align: center;
     }
 
     .infowin {
-        color: #313131;
+        color: #000000;
     }
 
     #title,
