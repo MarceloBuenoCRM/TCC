@@ -167,23 +167,24 @@
                 noteA.text(self.verificaArea())
 
                 if (self.bounds.contains(self.latLngA) == true) {
-                    this.isValido = true;
-                    navigator.geolocation.watchPosition(this.watchPosition, this.error, {
-                        enableHighAccuracy: true, maximumAge: 30000, timeout: 3000
-                    })
+                    self.isValido = true;
+
+                    setInterval(function(){
+                        navigator.geolocation.getCurrentPosition(self.watchPosition)
+                    }, 1000)
                     setTimeout(() => {
-                        this.start(self.item.cad_tempo_minimo)
+                        self.start(self.item.cad_tempo_minimo)
                     }, 2000);
                 } else {
-                    this.isValido = false;
+                    self.isValido = false;
                 }
 
                 setTimeout(() => {
-                    this.loading = false;
+                    self.loading = false;
                 }, 2000);
 
                 setTimeout(() => {
-                    this.modal = false;
+                    self.modal = false;
                 }, 6000);
 
                 google.maps.event.addListener(self.markerCenter, 'click', function () {
@@ -231,18 +232,36 @@
             },
 
             watchPosition(position) {
-                this.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                console.log(position)
+                let self = this;
 
-                this.markerA.setPosition(this.latLngA)
+                self.markerA.setMap(null);
 
-                console.log(this.verificaArea())
-                if(this.verificaArea() == false){
-                    this.pause()
-                }
+                /*Trocar latitude e longitude fixa por position*/
+                self.latLngA = new google.maps.LatLng(-22.416817, -47.557889)
 
-                if(this.cron == ''){
-                    this.startTimer(this.duration)
-                }
+                self.markerA = new google.maps.Marker({
+                    position: self.latLngA,
+                    title: 'Location',
+                    map: self.map
+                })
+
+                self.markerA.setMap(self.map)
+
+                google.maps.event.addListener(self.markerA, 'click', function () {
+                    self.infoA.open(self.map, self.markerA);
+                });
+
+                // this.markerA.setPosition(this.latLngA)
+
+                // console.log(this.verificaArea())
+                // if(this.verificaArea() == false){
+                //     this.pause()
+                // }
+
+                // if(this.cron == ''){
+                //     this.startTimer(this.duration)
+                // }
             },
 
             aguardando(item) {
