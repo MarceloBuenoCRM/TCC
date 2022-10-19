@@ -36,10 +36,6 @@
                                     <span>Professor: {{item.dsc_professor}}</span> <br>
                                     <span>Sala: {{item.cad_num_sala}}</span> <br>
                                     <span>Bloco: {{item.cad_bloco}}</span>
-
-                                    <div v-if="text">
-                                        Tempo Mínimo: {{text}}
-                                    </div>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-school"></i>
@@ -50,8 +46,8 @@
                                     <i class="fas fa-arrow-circle-right"></i>
                                 </a>
 
-                                <button @click="pause">Pause</button>
-                                <button @click="startTimer(duration)">Continuar</button>
+                                <!-- <button @click="pause">Pause</button>
+                                <button @click="startTimer(duration_minimo)">Continuar</button> -->
                             </div>
                         </div>
 
@@ -59,7 +55,7 @@
                             <div id="note">
                                 <span id="title" style="color: white">&raquo;Tempo Mínimo: {{text}}&laquo;</span>
                                 <hr />
-                                <span id="title" style="color: red">&raquo;Tempo Tolerância: {{text}}&laquo;</span>
+                                <span id="title" style="color: red">&raquo;Tempo Tolerância: {{text_tolerancia}}&laquo;</span>
                             </div>
                             <div id="map"></div>
                         </div>
@@ -87,30 +83,37 @@
     export default {
         data() {
             return {
-                map: null,
-                url: '',
-                cron: '',
-                text: '',
-                aulas_reservadas: [],
-                duration: null,
-                modal: false,
-                loading: false,
-                timer: {
+                map                : null,
+                url                : '',
+                cron               : '',
+                cron_tolerancia    : '',
+                text               : '',
+                text_tolerancia    : '',
+                aulas_reservadas   : [],
+                duration_minimo    : null,
+                duration_tolerancia: null,
+                modal              : false,
+                loading            : false,
+                timer              : {
                     minutes: 0,
                     seconds: 0
                 },
-                latLngCenter: null,
+                timer_tolerancia: {
+                    minutes: 0,
+                    seconds: 0
+                },
+                latLngCenter : null,
                 latLngCMarker: null,
-                latLngA: null,
-                map: null,
-                markerCenter: null,
-                infoCenter: null,
-                markerA: null,
-                infoA: null,
-                circle: null,
-                bounds: null,
-                isValido: null,
-                item: {}
+                latLngA      : null,
+                map          : null,
+                markerCenter : null,
+                infoCenter   : null,
+                markerA      : null,
+                infoA        : null,
+                circle       : null,
+                bounds       : null,
+                isValido     : null,
+                item         : {}
             }
         },
 
@@ -127,22 +130,22 @@
                 let self = this;
 
                 var contentCenter = '<span class="infowin">Sala de aula ' + self.item.cad_num_sala + '</span>'
-                var contentA = '<span class="infowin">Eu</span>'
+                var contentA      = '<span class="infowin">Eu</span>'
 
-                self.latLngCenter = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
+                self.latLngCenter  = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
                 self.latLngCMarker = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
 
                 self.map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 25,
-                    center: self.latLngCenter,
-                    mapTypeId: 'terrain',
+                    zoom          : 25,
+                    center        : self.latLngCenter,
+                    mapTypeId     : 'terrain',
                     mapTypeControl: false
                 })
 
                 self.markerCenter = new google.maps.Marker({
                     position: self.latLngCMarker,
-                    title: 'Location',
-                    map: self.map
+                    title   : 'Location',
+                    map     : self.map
                 })
 
                 self.infoCenter = new google.maps.InfoWindow({
@@ -151,8 +154,8 @@
 
                 self.markerA = new google.maps.Marker({
                     position: self.latLngA,
-                    title: 'Location',
-                    map: self.map
+                    title   : 'Location',
+                    map     : self.map
                 })
 
                 self.infoA = new google.maps.InfoWindow({
@@ -200,15 +203,15 @@
                 let self = this;
 
                 self.circle = new google.maps.Circle({
-                    map: self.map,
+                    map      : self.map,
                     clickable: false,
                     // metres
-                    radius: self.item.cad_diametro / 2,
-                    fillColor: '#fff',
-                    fillOpacity: .6,
-                    strokeColor: '#313131',
+                    radius       : self.item.cad_diametro / 2,
+                    fillColor    : '#fff',
+                    fillOpacity  : .6,
+                    strokeColor  : '#313131',
                     strokeOpacity: .4,
-                    strokeWeight: .8
+                    strokeWeight : .8
                 })
             },
 
@@ -219,9 +222,9 @@
             },
 
             verificaLocalizacao(item) {
-                this.modal = true;
+                this.modal   = true;
                 this.loading = true;
-                this.item = item
+                this.item    = item
 
                 navigator.geolocation.getCurrentPosition(this.currentPosition)
             },
@@ -232,18 +235,16 @@
             },
 
             watchPosition(position) {
-                console.log(position)
                 let self = this;
 
                 self.markerA.setMap(null);
 
-                /*Trocar latitude e longitude fixa por position*/
-                self.latLngA = new google.maps.LatLng(-22.416817, -47.557889)
+                self.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
 
                 self.markerA = new google.maps.Marker({
                     position: self.latLngA,
-                    title: 'Location',
-                    map: self.map
+                    title   : 'Location',
+                    map     : self.map
                 })
 
                 self.markerA.setMap(self.map)
@@ -252,15 +253,16 @@
                     self.infoA.open(self.map, self.markerA);
                 });
 
-                // this.markerA.setPosition(this.latLngA)
+                // if(self.verificaArea() == false){
+                //     self.pauseMinimo()
 
-                // console.log(this.verificaArea())
-                // if(this.verificaArea() == false){
-                //     this.pause()
-                // }
 
-                // if(this.cron == ''){
-                //     this.startTimer(this.duration)
+                //         self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
+
+                //     self.startTimerTolerancia(self.duration_tolerancia)
+                // }else if (self.verificaArea() == true && self.cron_tolerancia){
+                //     self.pauseTolerancia()
+                //     self.startTimer(self.duration_tolerancia)
                 // }
             },
 
@@ -306,27 +308,37 @@
             },
 
             start() {
-                var duration = 60 * 1; // Converter para segundos
+                var duration_minimo = 60 * this.item.cad_tempo_minimo;  // Converter para segundos
                 this.resetCronometro();
-                this.startTimer(duration); // iniciando o timer
+                this.startTimer(duration_minimo); // iniciando o timer
             },
 
-            pause() {
+            pauseMinimo() {
+                clearInterval(this.cron)
+            },
+
+            pauseTolerancia() {
                 clearInterval(this.cron)
             },
 
             resetCronometro() {
                 clearInterval(this.cron)
-                this.duration = null
-                this.timer = {
+                clearInterval(this.cron_tolerancia)
+                this.duration_minimo = null
+                this.timer           = {
+                    minutes: 0,
+                    seconds: 0
+                }
+                this.duration_tolerancia = null
+                this.timer_tolerancia    = {
                     minutes: 0,
                     seconds: 0
                 }
             },
 
-            startTimer(duration) {
-                let self = this;
-                let timer = duration
+            startTimer(duration_minimo) {
+                let self  = this;
+                let timer = duration_minimo
 
                 self.cron = setInterval(function () {
                     self.timer.minutes = parseInt(timer / 60, 10);
@@ -339,10 +351,32 @@
 
                     if (--timer < 0) {
                         //IMPLEMENTAR TABELA PRESENCA
-                        timer = duration;
+                        timer = duration_minimo;
                     }
 
-                    self.duration = timer
+                    self.duration_minimo = timer
+                }, 1000);
+            },
+
+            startTimerTolerancia(duration_tolerancia) {
+                let self  = this;
+                let timer = duration_tolerancia
+
+                self.cron_tolerancia = setInterval(function () {
+                    self.timer_tolerancia.minutes = parseInt(timer / 60, 10);
+                    self.timer_tolerancia.seconds = parseInt(timer % 60, 10);
+                    self.timer_tolerancia.minutes = self.timer_tolerancia.minutes < 10 ? "0" + self.timer_tolerancia.minutes : self.timer_tolerancia
+                        .minutes;
+                    self.timer_tolerancia.seconds = self.timer_tolerancia.seconds < 10 ? "0" + self.timer_tolerancia.seconds : self.timer_tolerancia
+                        .seconds;
+                    self.text_tolerancia = self.timer_tolerancia.minutes + ":" + self.timer_tolerancia.seconds;
+
+                    if (--timer < 0) {
+                        //IMPLEMENTAR TABELA PRESENCA
+                        timer = duration_tolerancia;
+                    }
+
+                    self.duration_tolerancia = timer
                 }, 1000);
             }
         }
@@ -364,32 +398,32 @@
 
     #map_area {
         height: 30%;
-        width: 30%;
+        width : 30%;
     }
 
     #map {
-        position: absolute;
-        height: 52%;
-        width: 29%;
+        position   : absolute;
+        height     : 52%;
+        width      : 29%;
         font-family: Arial, sans-serif;
-        font-size: .9em;
-        color: #fff;
+        font-size  : .9em;
+        color      : #fff;
     }
 
     #note {
         text-align: center;
-        padding: .3em;
+        padding   : .3em;
         background: #000000;
     }
 
     .bool {
         font-style: italic;
-        color: #ffffff;
+        color     : #ffffff;
     }
 
     .info {
-        display: inline-block;
-        width: 40%;
+        display   : inline-block;
+        width     : 40%;
         text-align: center;
     }
 

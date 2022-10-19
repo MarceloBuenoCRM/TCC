@@ -8,7 +8,7 @@
                         {{$t('message.sistema')}}
                     </a>
                 </li>
-                <li class="breadcrumb-item active">{{$tc('message.usuario', 2)}}</li>
+                <li class="breadcrumb-item active">Histórico</li>
             </ol>
         </div>
 
@@ -18,15 +18,8 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6 content_index">
-                                <h1 class="m-0">{{$tc('message.usuario', 2)}}</h1>
+                                <h1 class="m-0">Histórico</h1>
                             </div>
-                        </div>
-
-                        <div class="row mb-2 button_index">
-                            <button type="button" class="btn btn-primary btn-sm" @click="openModal()">
-                                <i class="fas fa-plus"></i>
-                                {{$t('message.novo')}}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -48,9 +41,17 @@
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
                                         <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
-                                            <el-form-item :label="$tc('message.nome', 1)" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                <el-input v-model="form.cad_nome" clearable></el-input>
-                                            </el-form-item>
+                                            <div class="row">
+                                                <el-form-item label="Professor" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
+                                                    <el-input v-model="form.cad_nome" clearable></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="Disciplina" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
+                                                    <el-input v-model="form.cad_nome" clearable></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="Disciplina" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
+                                                    <el-input v-model="form.cad_nome" clearable></el-input>
+                                                </el-form-item>
+                                            </div>
                                         </el-form>
                                     </div>
                                     <div class="card-footer card_footer_index">
@@ -72,22 +73,16 @@
                                     <el-table-column prop="id" :label="$t('message.id')" width="120px" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" :label="$tc('message.nome', 2)" show-overflow-tooltip>
+                                    <el-table-column prop="cad_email" label="Professor" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_email" :label="$t('message.email')" show-overflow-tooltip>
+                                    <el-table-column prop="cad_nome" label="Disciplina" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column label="Funções" align="center">
-                                        <template slot-scope="scope">
-                                            <a href="#" class="edit" @click.prevent="openModal(scope.row.id, true)" :title="$t('message.editar')">
-                                                <i class="fas fa-edit" style="color:#0085fa;"></i>
-                                            </a>
+                                    <el-table-column prop="cad_nome" label="Data Aula" show-overflow-tooltip>
+                                    </el-table-column>
 
-                                            <a href="#" @click.prevent="confirmDelete(scope.row.id)" :title="$t('message.excluir')">
-                                                <i class="fas fa-trash-alt" style="color:#f00;"></i>
-                                            </a>
-                                        </template>
+                                    <el-table-column prop="cad_nome" label="Presença" show-overflow-tooltip>
                                     </el-table-column>
                                 </el-table>
 

@@ -1,9 +1,4 @@
 <template>
-
-    <!-- FALTA TEMPO MINIMO E TEMPO DE TOLERANCIA -->
-
-
-
     <div class="d-flex flex-column">
         <div class="content-header col-sm-6 breadcrumb_index">
             <ol class="breadcrumb float-sm-left">

@@ -37,7 +37,7 @@
 
                         <el-form-item :label="$t('message.num_sala')" class="col-sm-12 col-md-4" size="mini" prop="cad_num_sala">
                             <el-select v-model="form.cad_num_sala" placeholder="Selecione" style="width: 100%" filterable>
-                                <el-option v-for="item in salas" :key="item.id" :label="item.cad_num_sala + '-' + item.cad_bloco" :value="item.id"></el-option>
+                                <el-option v-for="item in salas" :key="item.id" :label="item.cad_num_sala" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
 
