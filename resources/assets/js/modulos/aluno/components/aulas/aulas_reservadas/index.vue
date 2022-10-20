@@ -172,9 +172,8 @@
                 if (self.bounds.contains(self.latLngA) == true) {
                     self.isValido = true;
 
-                    setInterval(function(){
-                        navigator.geolocation.getCurrentPosition(self.watchPosition)
-                    }, 1000)
+                    navigator.geolocation.watchPosition(self.watchPosition)
+
                     setTimeout(() => {
                         self.start(self.item.cad_tempo_minimo)
                     }, 2000);
@@ -236,7 +235,7 @@
 
             watchPosition(position) {
                 let self = this;
-
+               
                 self.markerA.setMap(null);
 
                 self.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
@@ -253,13 +252,13 @@
                     self.infoA.open(self.map, self.markerA);
                 });
 
-                // if(self.verificaArea() == false){
-                //     self.pauseMinimo()
+                if(self.verificaArea() == false){
+                    self.pauseMinimo()
+                }
 
+                    // self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
 
-                //         self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
-
-                //     self.startTimerTolerancia(self.duration_tolerancia)
+                    // self.startTimerTolerancia(self.duration_tolerancia)
                 // }else if (self.verificaArea() == true && self.cron_tolerancia){
                 //     self.pauseTolerancia()
                 //     self.startTimer(self.duration_tolerancia)
