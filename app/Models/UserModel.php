@@ -40,6 +40,10 @@ class UserModel extends Model
             $query->where('cad_email', 'LIKE', '%' . $params['cad_email'] . '%');
         }
 
+        if (isset($params['tipo_usuario'])) {
+            $query->where('tipo_usuario', $params['tipo_usuario']);
+        }
+
         return $query;
     }
 

@@ -21,7 +21,7 @@ class IntervencaoService
 
     public function show($id)
     {
-        return $this->model->index([])->where('id', $id);
+        return $this->model->index([])->where('intervencao.id', $id);
     }
 
     public function create($data)

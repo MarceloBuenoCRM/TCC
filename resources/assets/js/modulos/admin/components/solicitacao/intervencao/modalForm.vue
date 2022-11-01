@@ -17,8 +17,8 @@
                 <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm"
                     @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
-                        <el-form-item label="Aluno" class="col-sm-12 col-md-12" size="mini" prop="cad_aluno">
-                            <el-input v-model="form.cad_aluno" clearable disabled></el-input>
+                        <el-form-item label="Aluno" class="col-sm-12 col-md-12" size="mini" prop="cad_nome">
+                            <el-input v-model="form.cad_nome" clearable disabled></el-input>
                         </el-form-item>
 
                         <el-form-item label="Data" class="col-sm-12 col-md-6" size="mini" prop="cad_data">

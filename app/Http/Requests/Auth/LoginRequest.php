@@ -74,6 +74,7 @@ class LoginRequest extends FormRequest
         Cookie::queue('token_api', substr($token, strpos($token, "|") + 1), 60, null, null, false, false);
         Cookie::queue('modo_escuro', $modoEscuro, 60, null, null, false, false);
         Cookie::queue('cad_nome', $user->cad_nome, 60, null, null, false, false);
+        Cookie::queue('tipo_usuario', $user->tipo_usuario, 60, null, null, false, false);
 
         $user->update(['cad_token_api' => $token]);
 

@@ -13,7 +13,7 @@ class IntervencaoTransformer
             $value->cad_disciplina       = (string)$value->cad_disciplina;
             $value->cad_data             = (string)$value->cad_data;
             $value->cad_professor        = (string)$value->cad_professor;
-            $value->cad_motivo           = (int)$value->cad_motivo;
+            $value->cad_motivo           = (string)$value->cad_motivo;
             return $value;
         });
 

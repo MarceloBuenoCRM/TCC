@@ -27,7 +27,7 @@ class AulaModel extends Model
     public function index($params)
     {
         $query = $this->select("*")
-                      ->orderBy('cad_data_hora_inicio', 'DESC');
+                      ->orderBy('cad_data_hora_inicio');
 
         $query = $this->filter($query, $params);
 

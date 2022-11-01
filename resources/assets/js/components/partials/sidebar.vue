@@ -13,8 +13,8 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-                    <li class="nav-header">MENU (Admin)</li>
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'principal.dashboard')}">
+                    <li class="nav-header" v-if="tipo_usuario == 0">MENU (Admin)</li>
+                    <li class="nav-item"  v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'principal.dashboard')}">
                         <a href="/principal" class="nav-link"
                             :class="{'active': isModuloMenu($route.name, 'principal.dashboard')}">
                             <i class="fas fa-home"></i>
@@ -36,7 +36,7 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'admin.cadastro')}">
+                    <li class="nav-item" v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'admin.cadastro')}">
                         <a href="/admin/cadastro" class="nav-link" :class="{'active': isModuloMenu($route.name, 'admin.cadastro')}">
                             <i class="fas fa-edit"></i>
                             <p>
@@ -66,7 +66,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'admin.solicitacao')}">
+
+                    <li class="nav-item" v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'admin.solicitacao')}">
                         <a href="/admin/solicitacao" class="nav-link" :class="{'active': isModuloMenu($route.name, 'admin.solicitacao')}">
                             <i class="fas fa-headset"></i>
                             <p>
@@ -87,8 +88,8 @@
                         </ul>
                     </li>
 
-                    <li class="nav-header">MENU (Professor)</li>
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'professor.cadastro')}">
+                    <li class="nav-header" v-if="tipo_usuario == 1">MENU (Professor)</li>
+                    <li class="nav-item" v-if="tipo_usuario == 1" :class="{'menu-open': isModuloMenu($route.name, 'professor.cadastro')}">
                         <a href="/professor/cadastro" class="nav-link" :class="{'active': isModuloMenu($route.name, 'professor.cadastro')}">
                             <i class="fas fa-edit"></i>
                             <p>
@@ -108,7 +109,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'professor.solicitacao')}">
+
+                    <li class="nav-item" v-if="tipo_usuario == 1" :class="{'menu-open': isModuloMenu($route.name, 'professor.solicitacao')}">
                         <a href="/professor/solicitacao" class="nav-link" :class="{'active': isModuloMenu($route.name, 'professor.solicitacao')}">
                             <i class="fas fa-headset"></i>
                             <p>
@@ -129,8 +131,8 @@
                         </ul>
                     </li>
 
-                    <li class="nav-header">MENU (Aluno)</li>
-                    <li class="nav-item" :class="{'menu-open': isModuloMenu($route.name, 'aluno.aulas')}">
+                    <li class="nav-header" v-if="tipo_usuario == 2">MENU (Aluno)</li>
+                    <li class="nav-item" v-if="tipo_usuario == 2" :class="{'menu-open': isModuloMenu($route.name, 'aluno.aulas')}">
                         <a href="/aluno/aulas" class="nav-link" :class="{'active': isModuloMenu($route.name, 'aluno.aulas')}">
                             <i class="fas fa-school"></i>
                             <p>
@@ -168,6 +170,12 @@
 
 <script>
     export default {
+        data() {
+            return {
+                tipo_usuario: Cookie.get("tipo_usuario")
+            }
+        },
+
         methods: {
             isModuloMenu(route, nome) {
                 route = route.split('.');

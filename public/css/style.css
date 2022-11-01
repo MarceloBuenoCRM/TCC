@@ -70,3 +70,8 @@
 .el-date-editor--datetime{
     width: 100% !important;
 }
+
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner {
+    color: #212529 !important;
+}

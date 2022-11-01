@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::resource('usuario', 'App\Http\Controllers\UserController', ['parameters' => ['' => 'id']]);
         Route::put('usuario/modo_escuro/{id}', ['as' => 'usuario.modo_escuro', 'uses' => 'App\Http\Controllers\UserController@alteraModoEscuro']);
 
+        Route::get('alunos', 'App\Http\Controllers\UserController@getAlunos');
+
         /* Sala de Aula */
         Route::resource('sala_aula', 'App\Http\Controllers\SalaController', ['parameters' => ['' => 'id']]);
 

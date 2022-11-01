@@ -85,4 +85,12 @@ class UserController extends Controller
         return response([], 204)->withCookie(cookie()->make('modo_escuro', (string)(int)$modoEscuro, 60, null, null, false, false))
         ->withCookie(cookie()->make('token_api', Cookie::get('token_api'), 60, null, null, false, false));
     }
+
+    public function getAlunos(){
+        $rows = $this->service->index(['tipo_usuario' => 2])->get();
+
+        return response()->json([
+            'data' => $rows
+        ]);
+    }
 }

@@ -64,6 +64,11 @@
                             <el-input-number v-model="form.cad_tempo_tolerancia" :min="1" :max="20" clearable>
                             </el-input-number>
                         </el-form-item>
+
+                        <el-form-item label="Reservar para o Semestre" class="col-sm-12 col-md-4" size="mini" prop="cad_recorrencia">
+                            <el-checkbox v-model="form.cad_recorrencia">
+                            </el-checkbox>
+                        </el-form-item>
                     </div>
                 </el-form>
             </div>
@@ -100,12 +105,13 @@
                     cad_disciplina      : '',
                     cad_curso           : '',
                     cad_periodo         : '',
-                    cad_num_sala        : '',
+                    cad_num_sala        : '1',
                     cad_bloco           : '',
                     cad_data_hora_inicio: moment().format('YYYY-MM-DD 19:10:00'),
                     cad_data_hora_fim   : moment().format('YYYY-MM-DD 22:00:00'),
                     cad_tempo_minimo    : 50,
-                    cad_tempo_tolerancia: 20
+                    cad_tempo_tolerancia: 20,
+                    cad_recorrencia: true,
                 },
                 rules: {
                     cad_disciplina: [{

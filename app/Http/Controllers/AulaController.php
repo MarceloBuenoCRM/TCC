@@ -46,7 +46,20 @@ class AulaController extends Controller
     {
         $data = $request->all();
 
-        $row = $this->service->create($data);
+        if($data['cad_recorrencia'] == true){
+            for ($i=0; $i < 24; $i++) {
+                if($i >= 1){
+                    $datetimeIni = \DateTime::createFromFormat('Y-m-d H:i:s', $data['cad_data_hora_inicio']);
+                    $datetimeFim = \DateTime::createFromFormat('Y-m-d H:i:s', $data['cad_data_hora_fim']);
+                    $data['cad_data_hora_inicio'] = $datetimeIni->modify('+7 days')->format('Y-m-d H:i:s');
+                    $data['cad_data_hora_fim'] = $datetimeFim->modify('+7 days')->format('Y-m-d H:i:s');
+                }
+
+                $row = $this->service->create($data);
+            }
+        }else{
+            $row = $this->service->create($data);
+        }
 
         return response($row, 201);
     }

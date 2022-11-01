@@ -39,6 +39,7 @@ class ApiLoginController extends Controller
                 'token' => substr($token->plainTextToken, strpos($token->plainTextToken, "|") + 1),
                 'user' => Auth::user()->cad_nome,
                 'cad_modo_escuro' => Auth::user()->cad_modo_escuro,
+                'tipo_usuario' => Auth::user()->tipo_usuario,
             ]
         ]);
     }
@@ -50,6 +51,7 @@ class ApiLoginController extends Controller
                 'token' => substr(Auth::user()->cad_token_api, strpos(Auth::user()->cad_token_api, "|") + 1),
                 'user' => Auth::user()->cad_nome,
                 'cad_modo_escuro' => Auth::user()->cad_modo_escuro,
+                'tipo_usuario' => Auth::user()->tipo_usuario,
             ]
         ]);
     }

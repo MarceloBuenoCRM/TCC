@@ -33,6 +33,7 @@ class AulaRequest extends FormRequest
             'cad_data_hora_fim'    => ['required'],
             'cad_tempo_minimo'     => ['required'],
             'cad_tempo_tolerancia' => ['required'],
+            'cad_recorrencia'      => ['required'],
             'id_professor'         => '',
         ];
     }

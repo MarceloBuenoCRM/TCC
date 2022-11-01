@@ -17,7 +17,8 @@ class IntervencaoModel extends Model
 
     public function index($params)
     {
-        $query = $this->select("*")
+        $query = $this->select("intervencao.*", "users.cad_nome")
+                      ->join('users', 'users.id', 'intervencao.cad_aluno')
                       ->orderBy('cad_data', 'DESC');
 
         $query = $this->filter($query, $params);
@@ -36,7 +37,7 @@ class IntervencaoModel extends Model
         }
 
         if (isset($params['cad_aluno'])) {
-            $query->where('cad_aluno', $params['cad_aluno']);
+            $query->where('intervencao.cad_aluno', $params['cad_aluno']);
         }
 
         if (isset($params['cad_professor'])) {

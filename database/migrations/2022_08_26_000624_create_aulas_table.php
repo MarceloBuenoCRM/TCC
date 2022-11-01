@@ -24,6 +24,7 @@ class CreateAulasTable extends Migration
             $table->dateTime('cad_data_hora_fim');
             $table->integer('cad_tempo_minimo');
             $table->integer('cad_tempo_tolerancia');
+            $table->boolean('cad_recorrencia')->default(true);
             $table->integer('id_professor');
             $table->timestamps();
         });

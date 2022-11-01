@@ -88,7 +88,7 @@
                                         show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_aluno" label="Aluno" show-overflow-tooltip>
+                                    <el-table-column prop="cad_nome" label="Aluno" show-overflow-tooltip>
                                     </el-table-column>
 
                                     <el-table-column prop="cad_curso" label="Curso" show-overflow-tooltip>

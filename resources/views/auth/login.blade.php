@@ -7,9 +7,9 @@
     <x-guest-layout>
         <x-auth-card>
             <x-slot name="logo">
-                <img src="{{ asset('/images/logo.png') }}" alt="logoTheWall" class="text-gray-500 img-fluid" style="height: 25vh; width: 15vw">
+                <img src="{{ asset('/images/logo.png') }}" alt="logoTheWall" class="text-gray-500 img-fluid" style="height: 15vh; min-width: 8vw">
             </x-slot>
-    
+
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 

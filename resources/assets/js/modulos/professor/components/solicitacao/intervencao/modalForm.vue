@@ -16,7 +16,9 @@
                 <el-form ref="form" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm('form')" id="formUsuarios">
                     <div class="row">
                         <el-form-item label="Aluno" class="col-sm-12 col-md-12" size="mini" prop="cad_aluno">
-                            <el-input v-model="form.cad_aluno" clearable></el-input>
+                            <el-select v-model="form.cad_aluno" placeholder="Selecione" style="width: 100%" filterable>
+                                <el-option v-for="item in alunos" :key="item.id" :label="item.cad_nome" :value="item.id"></el-option>
+                            </el-select>
                         </el-form-item>
 
                         <el-form-item label="Data" class="col-sm-12 col-md-6"
@@ -114,11 +116,16 @@
                         trigger : "change",
                     }],
                 },
-                errors: []
+                errors: [],
+                alunos: []
             }
         },
 
         mixins: [modalMixins, notify, funcoes],
+
+        mounted() {
+            this.lookups();
+        },
 
         methods: {
             submitForm(form) {
@@ -164,6 +171,18 @@
                 axios.get('/sistema/intervencao/' + id_intervencao)
                     .then(function (response) {
                         self.form = response.data.data.data[0];
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            lookups() {
+                let self = this;
+
+                axios.get('/sistema/alunos')
+                    .then(function (response) {
+                        self.alunos = response.data.data;
                     })
                     .catch(function (error) {
                         console.log(error);
