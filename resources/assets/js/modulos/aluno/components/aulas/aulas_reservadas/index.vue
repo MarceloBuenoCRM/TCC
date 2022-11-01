@@ -46,8 +46,11 @@
                                     <i class="fas fa-arrow-circle-right"></i>
                                 </a>
 
-                                <!-- <button @click="pause">Pause</button>
-                                <button @click="startTimer(duration_minimo)">Continuar</button> -->
+                                <button @click="pauseMinimo()">Pause</button>
+                                <button @click="startTimer(duration_minimo)">Continuar</button>
+
+                                <button @click="pauseTolerancia()">Pause</button>
+                                <button @click="startTimerTolerancia(duration_tolerancia)">Continuar</button>
                             </div>
                         </div>
 
@@ -235,7 +238,7 @@
 
             watchPosition(position) {
                 let self = this;
-               
+
                 self.markerA.setMap(null);
 
                 self.latLngA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
@@ -310,6 +313,7 @@
                 var duration_minimo = 60 * this.item.cad_tempo_minimo;  // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration_minimo); // iniciando o timer
+                this.startTimerTolerancia(duration_minimo)
             },
 
             pauseMinimo() {
@@ -317,7 +321,7 @@
             },
 
             pauseTolerancia() {
-                clearInterval(this.cron)
+                clearInterval(this.cron_tolerancia)
             },
 
             resetCronometro() {

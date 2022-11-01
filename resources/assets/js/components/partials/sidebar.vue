@@ -14,7 +14,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
                     <li class="nav-header" v-if="tipo_usuario == 0">MENU (Admin)</li>
-                    <li class="nav-item"  v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'principal.dashboard')}">
+                    <!-- <li class="nav-item"  v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'principal.dashboard')}">
                         <a href="/principal" class="nav-link"
                             :class="{'active': isModuloMenu($route.name, 'principal.dashboard')}">
                             <i class="fas fa-home"></i>
@@ -34,7 +34,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
                     <li class="nav-item" v-if="tipo_usuario == 0" :class="{'menu-open': isModuloMenu($route.name, 'admin.cadastro')}">
                         <a href="/admin/cadastro" class="nav-link" :class="{'active': isModuloMenu($route.name, 'admin.cadastro')}">

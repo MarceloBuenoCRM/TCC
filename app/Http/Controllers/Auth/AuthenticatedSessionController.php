@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect(Auth::user()->tipo_usuario == 0 ? '/admin' : (Auth::user()->tipo_usuario == 1 ? '/professor' : '/aluno'));
     }
 
     /**
@@ -47,9 +47,9 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request)
     {
         User::where('cad_email', Auth::user()->cad_email)->update(['cad_token_api' => '']);
-        
+
         auth()->user()->tokens()->delete();
-        
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
