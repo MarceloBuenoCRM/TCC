@@ -28,6 +28,6 @@ class CreatePresencasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salas');
+        Schema::dropIfExists('presencas');
     }
 }

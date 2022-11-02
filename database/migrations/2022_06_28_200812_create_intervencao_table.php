@@ -32,6 +32,6 @@ class CreateIntervencaoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exemplo_models');
+        Schema::dropIfExists('intervencao');
     }
 }
