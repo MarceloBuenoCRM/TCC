@@ -46,6 +46,14 @@ class PresencaController extends Controller
     {
         $data = $request->all();
 
+        if(isset($data['verifica'])){
+            $row = PresencaModel::where('id_aula', $data['id_aula'])->get();
+
+            if(count($row) > 0){
+                return response(['ok'], 201);
+            }
+        }
+
         $row = $this->service->create($data);
 
         return response($row, 201);

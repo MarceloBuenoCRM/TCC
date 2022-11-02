@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="edit == true ? $t('message.edit', {msg:  'Intervenção'}) : $t('message.add', {msg:  'Intervenção'})" :visible.sync="dialogVisible"
+    <el-dialog :title="edit == true ? $t('message.edit', {msg:  'Intervenção'}) : $t('message.add', {msg:  'Intervenção'})" :visible.sync="dialogVisible" width="70%"
         :before-close="closeModalForm" append-to-body>
         <div class="card card-gray-custom">
             <div class="card-header">

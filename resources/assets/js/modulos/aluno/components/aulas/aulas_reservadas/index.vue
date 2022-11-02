@@ -29,6 +29,7 @@
                                         <strong>AGUARDANDO</strong>
                                     </h6>
                                     <h6 v-if="!liberaAula(item) && !aguardando(item)">
+                                        {{reprova(item)}}
                                         <strong>ENCERRADO</strong>
                                     </h6>
                                     <span>Início: {{formatDateTime(item.cad_data_hora_inicio)}}</span> <br>
@@ -36,13 +37,16 @@
                                     <span>Professor: {{item.dsc_professor}}</span> <br>
                                     <span>Sala: {{item.cad_num_sala}}</span> <br>
                                     <span>Bloco: {{item.cad_bloco}}</span><br>
-                                    <span v-if="form_presenca.presenca == '1'" style="color: blue">STATUS: PRESENÇA CONFIRMADA</span>
-                                    <span v-if="form_presenca.presenca == '0'" style="color: red">STATUS: PRESENÇA NÃO CONFIRMADA</span>
+                                    <span v-if="form_presenca.presenca == '1'" style="color: blue">STATUS: PRESENÇA
+                                        CONFIRMADA</span>
+                                    <span v-if="form_presenca.presenca == '0'" style="color: red">STATUS: PRESENÇA NÃO
+                                        CONFIRMADA</span>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-school"></i>
                                 </div>
-                                <a href="#" class="small-box-footer" v-if="liberaAula(item) && trava_presenca == false" @click="verificaLocalizacao(item)">
+                                <a href="#" class="small-box-footer" v-if="liberaAula(item) && trava_presenca == false"
+                                    @click="verificaLocalizacao(item)">
                                     Confirmar Presença
                                     <i class="fas fa-arrow-circle-right"></i>
                                 </a>
@@ -91,20 +95,20 @@
     export default {
         data() {
             return {
-                map                : null,
-                url                : '',
-                cron               : '',
-                cron_tolerancia    : '',
-                text               : '',
-                text_tolerancia    : '',
-                aulas_reservadas   : [],
-                duration_minimo    : null,
+                map: null,
+                url: '',
+                cron: '',
+                cron_tolerancia: '',
+                text: '',
+                text_tolerancia: '',
+                aulas_reservadas: [],
+                duration_minimo: null,
                 duration_tolerancia: null,
-                modal              : false,
-                loading            : false,
-                pausa_tempo        : false,
-                trava_presenca     : false,
-                timer              : {
+                modal: false,
+                loading: false,
+                pausa_tempo: false,
+                trava_presenca: false,
+                timer: {
                     minutes: 0,
                     seconds: 0
                 },
@@ -112,18 +116,18 @@
                     minutes: 0,
                     seconds: 0
                 },
-                latLngCenter : null,
+                latLngCenter: null,
                 latLngCMarker: null,
-                latLngA      : null,
-                map          : null,
-                markerCenter : null,
-                infoCenter   : null,
-                markerA      : null,
-                infoA        : null,
-                circle       : null,
-                bounds       : null,
-                isValido     : null,
-                item         : {},
+                latLngA: null,
+                map: null,
+                markerCenter: null,
+                infoCenter: null,
+                markerA: null,
+                infoA: null,
+                circle: null,
+                bounds: null,
+                isValido: null,
+                item: {},
                 form_presenca: {}
             }
         },
@@ -137,26 +141,40 @@
         },
 
         methods: {
+            reprova(item) {
+                axios.post('/sistema/presenca', {
+                        id_aula: item.id,
+                        presenca: 0,
+                        verifica: true
+                    })
+                    .then(function () {
+                        console.log('ok')
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
             startMap() {
                 let self = this;
 
                 var contentCenter = '<span class="infowin">Sala de aula ' + self.item.cad_num_sala + '</span>'
-                var contentA      = '<span class="infowin">Eu</span>'
+                var contentA = '<span class="infowin">Eu</span>'
 
-                self.latLngCenter  = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
+                self.latLngCenter = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
                 self.latLngCMarker = new google.maps.LatLng(self.item.cad_latitude, self.item.cad_longitude)
 
                 self.map = new google.maps.Map(document.getElementById('map'), {
-                    zoom          : 25,
-                    center        : self.latLngCenter,
-                    mapTypeId     : 'terrain',
+                    zoom: 25,
+                    center: self.latLngCenter,
+                    mapTypeId: 'terrain',
                     mapTypeControl: false
                 })
 
                 self.markerCenter = new google.maps.Marker({
                     position: self.latLngCMarker,
-                    title   : 'Location',
-                    map     : self.map
+                    title: 'Location',
+                    map: self.map
                 })
 
                 self.infoCenter = new google.maps.InfoWindow({
@@ -165,8 +183,8 @@
 
                 self.markerA = new google.maps.Marker({
                     position: self.latLngA,
-                    title   : 'Location',
-                    map     : self.map
+                    title: 'Location',
+                    map: self.map
                 })
 
                 self.infoA = new google.maps.InfoWindow({
@@ -187,6 +205,7 @@
 
                     setTimeout(() => {
                         self.start(self.item.cad_tempo_minimo)
+                        self.trava_presenca = true;
                     }, 2000);
                 } else {
                     self.isValido = false;
@@ -213,15 +232,15 @@
                 let self = this;
 
                 self.circle = new google.maps.Circle({
-                    map      : self.map,
+                    map: self.map,
                     clickable: false,
                     // metres
-                    radius       : self.item.cad_diametro / 2,
-                    fillColor    : '#fff',
-                    fillOpacity  : .6,
-                    strokeColor  : '#313131',
+                    radius: self.item.cad_diametro / 2,
+                    fillColor: '#fff',
+                    fillOpacity: .6,
+                    strokeColor: '#313131',
                     strokeOpacity: .4,
-                    strokeWeight : .8
+                    strokeWeight: .8
                 })
             },
 
@@ -232,9 +251,9 @@
             },
 
             verificaLocalizacao(item) {
-                this.modal   = true;
+                this.modal = true;
                 this.loading = true;
-                this.item    = item
+                this.item = item;
 
                 navigator.geolocation.getCurrentPosition(this.currentPosition)
             },
@@ -253,8 +272,8 @@
 
                 self.markerA = new google.maps.Marker({
                     position: self.latLngA,
-                    title   : 'Location',
-                    map     : self.map
+                    title: 'Location',
+                    map: self.map
                 })
 
                 self.markerA.setMap(self.map)
@@ -318,7 +337,7 @@
             },
 
             start(cad_tempo_minimo) {
-                var duration_minimo = 60 * cad_tempo_minimo;  // Converter para segundos
+                var duration_minimo = 60 * cad_tempo_minimo; // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration_minimo); // iniciando o timer
             },
@@ -335,19 +354,19 @@
                 clearInterval(this.cron)
                 clearInterval(this.cron_tolerancia)
                 this.duration_minimo = null
-                this.timer           = {
+                this.timer = {
                     minutes: 0,
                     seconds: 0
                 }
                 this.duration_tolerancia = null
-                this.timer_tolerancia    = {
+                this.timer_tolerancia = {
                     minutes: 0,
                     seconds: 0
                 }
             },
 
             startTimer(duration_minimo) {
-                let self  = this;
+                let self = this;
                 let timer = duration_minimo
 
                 self.cron = setInterval(function () {
@@ -369,36 +388,39 @@
             },
 
             startTimerTolerancia(duration_tolerancia) {
-                let self  = this;
+                let self = this;
                 let timer = duration_tolerancia
 
                 self.cron_tolerancia = setInterval(function () {
                     self.timer_tolerancia.minutes = parseInt(timer / 60, 10);
                     self.timer_tolerancia.seconds = parseInt(timer % 60, 10);
                     self.timer_tolerancia.minutes = self.timer_tolerancia.minutes < 10 ? "0" + self
-                        .timer_tolerancia.minutes: self.timer_tolerancia
+                        .timer_tolerancia.minutes : self.timer_tolerancia
                         .minutes;
                     self.timer_tolerancia.seconds = self.timer_tolerancia.seconds < 10 ? "0" + self
-                        .timer_tolerancia.seconds: self.timer_tolerancia
+                        .timer_tolerancia.seconds : self.timer_tolerancia
                         .seconds;
                     self.text_tolerancia = self.timer_tolerancia.minutes + ":" + self.timer_tolerancia.seconds;
 
                     if (--timer < 0 && self.salva_tolerancia == true) {
+                        clearInterval(self.cron);
+                        clearInterval(self.cron_tolerancia);
                         axios.post('/sistema/presenca', {
-                                id_aula : self.item.id,
+                                id_aula: self.item.id,
                                 presenca: 0
                             })
                             .then(function () {
                                 self.$notify({
-                                    title  : 'Erro!',
+                                    title: 'Erro!',
                                     message: 'Não foi possível confirmar sua presença!',
-                                    type   : 'error'
+                                    type: 'error'
                                 });
 
                                 self.salva_tolerancia = false;
                             })
                             .catch(function (error) {
                                 console.log(error);
+                                self.salva_tolerancia = false;
                             });
                     }
 
@@ -411,12 +433,12 @@
 
                 if (self.duration_tolerancia > 0 || self.duration_tolerancia == null) {
                     self.form_presenca = {
-                        id_aula : self.item.id,
+                        id_aula: self.item.id,
                         presenca: '1'
                     }
                 } else {
                     self.form_presenca = {
-                        id_aula : self.item.id,
+                        id_aula: self.item.id,
                         presenca: '0'
                     }
                 }
@@ -425,23 +447,23 @@
                     .then(function () {
                         if (self.form_presenca.presenca == '1') {
                             self.$notify({
-                                title  : self.$t('message.sucesso'),
+                                title: self.$t('message.sucesso'),
                                 message: 'Presença confirmada com sucesso!',
-                                type   : 'success'
+                                type: 'success'
                             });
                         } else {
                             self.$notify({
-                                title  : 'Erro!',
+                                title: 'Erro!',
                                 message: 'Não foi possível confirmar sua presença!',
-                                type   : 'error'
+                                type: 'error'
                             });
                         }
                     })
                     .catch(function () {
                         self.$notify({
-                            title  : 'Erro!',
+                            title: 'Erro!',
                             message: 'Não foi possível confirmar sua presença!',
-                            type   : 'error'
+                            type: 'error'
                         });
                     });
 
@@ -466,32 +488,32 @@
 
     #map_area {
         height: 30%;
-        width : 30%;
+        width: 30%;
     }
 
     #map {
-        position   : absolute;
-        height     : 52%;
-        width      : 29%;
+        position: absolute;
+        height: 52%;
+        width: 29%;
         font-family: Arial, sans-serif;
-        font-size  : .9em;
-        color      : #fff;
+        font-size: .9em;
+        color: #fff;
     }
 
     #note {
         text-align: center;
-        padding   : .3em;
+        padding: .3em;
         background: #000000;
     }
 
     .bool {
         font-style: italic;
-        color     : #ffffff;
+        color: #ffffff;
     }
 
     .info {
-        display   : inline-block;
-        width     : 40%;
+        display: inline-block;
+        width: 40%;
         text-align: center;
     }
 
