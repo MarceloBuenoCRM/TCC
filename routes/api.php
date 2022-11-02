@@ -40,5 +40,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
         /* Intervencao */
         Route::resource('intervencao', 'App\Http\Controllers\IntervencaoController', ['parameters' => ['' => 'id']]);
+
+        /* Presenca */
+        Route::resource('presenca', 'App\Http\Controllers\PresencaController', ['parameters' => ['' => 'id']]);
     });
 });

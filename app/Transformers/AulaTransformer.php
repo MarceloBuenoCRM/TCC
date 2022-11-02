@@ -22,7 +22,6 @@ class AulaTransformer
             $value->cad_longitude        = (float)$value->cad_longitude;
             $value->cad_diametro         = (int)$value->cad_diametro;
             $value->cad_recorrencia      = (int)$value->cad_recorrencia;
-            $value->dsc_professor        = (string) \Auth::user()->cad_nome;
             return $value;
         });
 

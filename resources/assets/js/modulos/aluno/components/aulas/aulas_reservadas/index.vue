@@ -20,7 +20,7 @@
                         <p style="text-align: center">Nenhuma aula reservada</p>
                     </div>
                     <div class="container-fluid" style="display: flex">
-                        <div class="col-lg-4 col-sm-4" v-for="item in aulas_reservadas" :key="item.id">
+                        <div class="col-lg-6 col-sm-6" v-for="item in aulas_reservadas" :key="item.id">
                             <div class="small-box"
                                 :class="{'bg-info': aguardando(item), 'bg-success': liberaAula(item), 'bg-danger': !liberaAula(item) && !aguardando(item)}">
                                 <div class="inner">
@@ -35,22 +35,23 @@
                                     <span>Fim: {{formatDateTime(item.cad_data_hora_fim)}}</span> <br>
                                     <span>Professor: {{item.dsc_professor}}</span> <br>
                                     <span>Sala: {{item.cad_num_sala}}</span> <br>
-                                    <span>Bloco: {{item.cad_bloco}}</span>
+                                    <span>Bloco: {{item.cad_bloco}}</span><br>
+                                    <span v-if="form_presenca.presenca == '1'" style="color: blue">STATUS: PRESENÇA CONFIRMADA</span>
+                                    <span v-if="form_presenca.presenca == '0'" style="color: red">STATUS: PRESENÇA NÃO CONFIRMADA</span>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-school"></i>
                                 </div>
-                                <a href="#" class="small-box-footer" v-if="liberaAula(item)"
-                                    @click="verificaLocalizacao(item)">
+                                <a href="#" class="small-box-footer" v-if="liberaAula(item) && trava_presenca == false" @click="verificaLocalizacao(item)">
                                     Confirmar Presença
                                     <i class="fas fa-arrow-circle-right"></i>
                                 </a>
 
-                                <button @click="pauseMinimo()">Pause</button>
+                                <!-- <button @click="pauseMinimo()">Pause</button>
                                 <button @click="startTimer(duration_minimo)">Continuar</button>
 
                                 <button @click="pauseTolerancia()">Pause</button>
-                                <button @click="startTimerTolerancia(duration_tolerancia)">Continuar</button>
+                                <button @click="startTimerTolerancia(duration_tolerancia)">Continuar</button> -->
                             </div>
                         </div>
 
@@ -58,7 +59,8 @@
                             <div id="note">
                                 <span id="title" style="color: white">&raquo;Tempo Mínimo: {{text}}&laquo;</span>
                                 <hr />
-                                <span id="title" style="color: red">&raquo;Tempo Tolerância: {{text_tolerancia}}&laquo;</span>
+                                <span id="title" style="color: red">&raquo;Tempo Tolerância:
+                                    {{text_tolerancia}}&laquo;</span>
                             </div>
                             <div id="map"></div>
                         </div>
@@ -69,10 +71,13 @@
 
         <el-dialog :visible.sync="modal" :show-close="false" fullscreen>
             <div v-loading="loading" element-loading-text="Confirmando sua localização...">
-                <el-result icon="success" title="Sucesso" subTitle="Localização Válida!" v-if="isValido == true && loading == false">
+                <el-result icon="success" title="Sucesso" subTitle="Localização Válida!"
+                    v-if="isValido == true && loading == false">
                 </el-result>
 
-                <el-result icon="error" title="Atenção" subTitle="Localização Inválida. Vá para a sala de aula e tente novamente!" v-else-if="isValido == false && loading == false">
+                <el-result icon="error" title="Atenção"
+                    subTitle="Localização Inválida. Vá para a sala de aula e tente novamente!"
+                    v-else-if="isValido == false && loading == false">
                 </el-result>
             </div>
         </el-dialog>
@@ -98,6 +103,7 @@
                 modal              : false,
                 loading            : false,
                 pausa_tempo        : false,
+                trava_presenca     : false,
                 timer              : {
                     minutes: 0,
                     seconds: 0
@@ -117,7 +123,8 @@
                 circle       : null,
                 bounds       : null,
                 isValido     : null,
-                item         : {}
+                item         : {},
+                form_presenca: {}
             }
         },
 
@@ -218,7 +225,7 @@
                 })
             },
 
-            verificaArea(){
+            verificaArea() {
                 let self = this;
 
                 return self.bounds.contains(self.latLngA)
@@ -256,12 +263,13 @@
                     self.infoA.open(self.map, self.markerA);
                 });
 
-                if(self.verificaArea() == false && self.pausa_tempo == false){
+                if (self.verificaArea() == false && self.pausa_tempo == false) {
                     self.pauseMinimo()
-                    self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
+                    self.duration_tolerancia = self.duration_tolerancia == null ? 60 * self.item.cad_tempo_tolerancia :
+                        self.duration_tolerancia;
                     self.startTimerTolerancia(self.duration_tolerancia)
                     self.pausa_tempo = true
-                }else if (self.verificaArea() == true && self.pausa_tempo == true){
+                } else if (self.verificaArea() == true && self.pausa_tempo == true) {
                     self.pauseTolerancia()
                     self.startTimer(self.duration_minimo)
                     self.pausa_tempo = false
@@ -309,8 +317,8 @@
                 self.aulas_reservadas = [];
             },
 
-            start() {
-                var duration_minimo = 60 * this.item.cad_tempo_minimo;  // Converter para segundos
+            start(cad_tempo_minimo) {
+                var duration_minimo = 60 * cad_tempo_minimo;  // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration_minimo); // iniciando o timer
             },
@@ -352,8 +360,8 @@
                     self.text = self.timer.minutes + ":" + self.timer.seconds;
 
                     if (--timer < 0) {
-                        //IMPLEMENTAR TABELA PRESENCA
-                        timer = duration_minimo;
+                        clearInterval(self.cron);
+                        self.salvaPresenca();
                     }
 
                     self.duration_minimo = timer
@@ -367,19 +375,77 @@
                 self.cron_tolerancia = setInterval(function () {
                     self.timer_tolerancia.minutes = parseInt(timer / 60, 10);
                     self.timer_tolerancia.seconds = parseInt(timer % 60, 10);
-                    self.timer_tolerancia.minutes = self.timer_tolerancia.minutes < 10 ? "0" + self.timer_tolerancia.minutes : self.timer_tolerancia
+                    self.timer_tolerancia.minutes = self.timer_tolerancia.minutes < 10 ? "0" + self
+                        .timer_tolerancia.minutes: self.timer_tolerancia
                         .minutes;
-                    self.timer_tolerancia.seconds = self.timer_tolerancia.seconds < 10 ? "0" + self.timer_tolerancia.seconds : self.timer_tolerancia
+                    self.timer_tolerancia.seconds = self.timer_tolerancia.seconds < 10 ? "0" + self
+                        .timer_tolerancia.seconds: self.timer_tolerancia
                         .seconds;
                     self.text_tolerancia = self.timer_tolerancia.minutes + ":" + self.timer_tolerancia.seconds;
 
-                    if (--timer < 0) {
-                        //IMPLEMENTAR TABELA PRESENCA
-                        timer = duration_tolerancia;
+                    if (--timer < 0 && self.salva_tolerancia == true) {
+                        axios.post('/sistema/presenca', {
+                                id_aula : self.item.id,
+                                presenca: 0
+                            })
+                            .then(function () {
+                                self.$notify({
+                                    title  : 'Erro!',
+                                    message: 'Não foi possível confirmar sua presença!',
+                                    type   : 'error'
+                                });
+
+                                self.salva_tolerancia = false;
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     }
 
                     self.duration_tolerancia = timer
                 }, 1000);
+            },
+
+            async salvaPresenca() {
+                let self = this;
+
+                if (self.duration_tolerancia > 0 || self.duration_tolerancia == null) {
+                    self.form_presenca = {
+                        id_aula : self.item.id,
+                        presenca: '1'
+                    }
+                } else {
+                    self.form_presenca = {
+                        id_aula : self.item.id,
+                        presenca: '0'
+                    }
+                }
+
+                await axios.post('/sistema/presenca', self.form_presenca)
+                    .then(function () {
+                        if (self.form_presenca.presenca == '1') {
+                            self.$notify({
+                                title  : self.$t('message.sucesso'),
+                                message: 'Presença confirmada com sucesso!',
+                                type   : 'success'
+                            });
+                        } else {
+                            self.$notify({
+                                title  : 'Erro!',
+                                message: 'Não foi possível confirmar sua presença!',
+                                type   : 'error'
+                            });
+                        }
+                    })
+                    .catch(function () {
+                        self.$notify({
+                            title  : 'Erro!',
+                            message: 'Não foi possível confirmar sua presença!',
+                            type   : 'error'
+                        });
+                    });
+
+                self.trava_presenca = true;
             }
         }
     }

@@ -22,7 +22,7 @@ class AulaService
 
     public function show($id)
     {
-        return $this->model->index([])->where('id', $id);
+        return $this->model->index([])->where('aulas.id', $id);
     }
 
     public function create($data)
@@ -45,8 +45,9 @@ class AulaService
         $initialDate = Carbon::now()->format('Y-m-d 00:00:00');
         $lastDate    = Carbon::now()->addDay(1)->format('Y-m-d 00:00:00');
         $rows = DB::table('aulas')
-                      ->select('aulas.*', 'salas.cad_latitude', 'salas.cad_longitude', 'salas.cad_diametro')
+                      ->select('aulas.*', 'salas.*', 'users.cad_nome as dsc_professor')
                       ->join('salas', 'salas.id', 'aulas.cad_num_sala')
+                      ->join('users', 'users.id', 'aulas.id_professor')
                       ->whereBetween('cad_data_hora_inicio', [$initialDate, $lastDate])
                       ->orderBy('cad_data_hora_inicio', 'DESC');
         return $rows;

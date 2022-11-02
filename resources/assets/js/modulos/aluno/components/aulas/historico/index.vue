@@ -40,28 +40,35 @@
                                         </div>
                                     </div>
                                     <div class="card-body" style="padding-bottom: 0px">
-                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm" @submit.native.prevent="submitForm()" id="formIndexUsuario">
+                                        <el-form ref="form" :model="form" label-position="top" class="demo-ruleForm"
+                                            @submit.native.prevent="submitForm()" id="formIndexUsuario">
                                             <div class="row">
-                                                <el-form-item label="Professor" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
+                                                <el-form-item label="Professor" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_nome">
                                                     <el-input v-model="form.cad_nome" clearable></el-input>
                                                 </el-form-item>
-                                                <el-form-item label="Disciplina" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                    <el-input v-model="form.cad_nome" clearable></el-input>
+                                                <el-form-item label="Disciplina" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_disciplina">
+                                                    <el-input v-model="form.cad_disciplina" clearable></el-input>
                                                 </el-form-item>
-                                                <el-form-item label="Disciplina" class="col-sm-12 col-md-3" size="mini" prop="cad_nome">
-                                                    <el-input v-model="form.cad_nome" clearable></el-input>
+                                                <el-form-item label="Data" class="col-sm-12 col-md-3" size="mini"
+                                                    prop="cad_data_hora_inicio">
+                                                    <el-date-picker v-model="form.cad_data_hora_inicio" type="date"
+                                                        format="dd/MM/yyyy" value-format="yyyy-MM-dd"
+                                                        v-mask="'##/##/####'" clearable>
+                                                    </el-date-picker>
                                                 </el-form-item>
                                             </div>
                                         </el-form>
                                     </div>
                                     <div class="card-footer card_footer_index">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <button native-type="submit" class="btn btn-primary btn-sm" form="formIndexUsuario">
+                                            <button native-type="submit" class="btn btn-primary btn-sm"
+                                                form="formIndexUsuario">
                                                 <i class="fas fa-search"></i>
                                                 {{$t('message.buscar')}}
                                             </button>
-                                            <button type="button" class="btn btn-light btn-sm"
-                                            @click="resetForm()">
+                                            <button type="button" class="btn btn-light btn-sm" @click="resetForm()">
                                                 <i class="fas fa-undo"></i>
                                                 {{$t('message.limpar')}}
                                             </button>
@@ -69,24 +76,39 @@
                                     </div>
                                 </div>
 
-                                <el-table :data="usuarios" style="width: 100%" tooltip-effect="dark" stripe>
-                                    <el-table-column prop="id" :label="$t('message.id')" width="120px" show-overflow-tooltip>
+                                <el-table :data="presenca" style="width: 100%" tooltip-effect="dark" stripe>
+                                    <el-table-column prop="id" :label="$t('message.id')" width="120px"
+                                        show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_email" label="Professor" show-overflow-tooltip>
+                                    <el-table-column prop="cad_nome" label="Professor" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" label="Disciplina" show-overflow-tooltip>
+                                    <el-table-column prop="cad_disciplina" label="Disciplina" show-overflow-tooltip>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" label="Data Aula" show-overflow-tooltip>
+                                    <el-table-column prop="cad_data_hora_inicio" label="Data Aula"
+                                        show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            {{formatDate(scope.row.cad_data_hora_inicio)}}
+                                        </template>
                                     </el-table-column>
 
-                                    <el-table-column prop="cad_nome" label="Presença" show-overflow-tooltip>
+                                    <el-table-column prop="presenca" label="Presença" show-overflow-tooltip>
+                                        <template slot-scope="scope">
+                                            <el-tag type="danger" v-if="scope.row.presenca == 0">
+                                                FALTA
+                                            </el-tag>
+
+                                            <el-tag type="success" v-else>
+                                                PRESENÇA
+                                            </el-tag>
+                                        </template>
                                     </el-table-column>
                                 </el-table>
 
-                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page" :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
+                                <pagination @navigate="searchForm" @sizeChange="searchForm" :page_size="form.per_page"
+                                    :currentPage="currentPage" :next_page="next_page" :prev_page="prev_page">
                                 </pagination>
                             </div>
                         </div>
@@ -94,33 +116,32 @@
                 </section>
             </div>
         </div>
-        <modal-form ref="modalForm" :edit="edit" @loadData="submitForm"></modal-form>
     </div>
 </template>
 
 <script>
-    import modalForm  from './modalForm';
-    import funcoes    from '../../../../../components/mixins/funcoes';
-    import notify     from '../../../../../components/mixins/notify.js';
+    import funcoes from '../../../../../components/mixins/funcoes';
+    import notify from '../../../../../components/mixins/notify.js';
     import pagination from '../../../../../components/partials/simplePagination.vue';
 
     export default {
         components: {
-            pagination,
-            modalForm
+            pagination
         },
 
         data() {
             return {
                 form: {
-                    cad_nome: '',
-                    per_page: 5,
+                    cad_nome            : '',
+                    cad_disciplina      : '',
+                    cad_data_hora_inicio: '',
+                    per_page            : 5,
                 },
-                url        : '',
-                usuarios   : [],
-                edit       : false,
-                next_page  : false,
-                prev_page  : false,
+                url: '',
+                presenca: [],
+                edit: false,
+                next_page: false,
+                prev_page: false,
                 currentPage: null
             }
         },
@@ -132,29 +153,6 @@
         },
 
         methods: {
-            openModal(id = '', edit = false) {
-                let self = this;
-
-                if (edit == true) {
-                    self.$refs.modalForm.carregaDados(id);
-                }
-                self.edit = edit;
-                self.$refs.modalForm.show();
-            },
-
-            delete(id_usuario) {
-                let self = this;
-
-                axios.delete('/sistema/usuario/' + id_usuario)
-                    .then(function () {
-                        self.submitForm();
-                        self.notifyDelete();
-                    })
-                    .catch((error) => {
-                        self.notifyError(error.response.data.message);
-                    });
-            },
-
             submitForm() {
                 let self = this;
 
@@ -164,29 +162,30 @@
             searchForm(page, page_size) {
                 let self = this;
 
-                self.resetUsuarios();
+                self.resetPresenca();
                 self.form.per_page = page_size;
-                self.form.page     = page;
-                self.url           = self.mountUrl('/sistema/usuario?', self.form);
+                self.form.page = page;
+                self.url = self.mountUrl('/sistema/presenca?', self.form);
 
                 axios.get(self.url)
                     .then(function (response) {
-                        self.currentPage   = response.data.data.current_page;
+                        self.currentPage = response.data.data.current_page;
                         self.form.per_page = parseInt(response.data.data.per_page);
-                        self.next_page     = Boolean(response.data.data.next_page_url);
-                        self.prev_page     = Boolean(response.data.data.prev_page_url);
-                        self.usuarios      = self.mountDataTable(response.data.data.data);
+                        self.next_page = Boolean(response.data.data.next_page_url);
+                        self.prev_page = Boolean(response.data.data.prev_page_url);
+                        self.presenca = self.mountDataTable(response.data.data.data);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-            resetUsuarios() {
+            resetPresenca() {
                 let self = this;
 
-                self.usuarios = [];
+                self.presenca = [];
             }
         }
     }
+
 </script>
