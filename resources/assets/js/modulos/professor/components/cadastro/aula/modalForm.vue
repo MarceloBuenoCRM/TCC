@@ -105,7 +105,7 @@
                     cad_disciplina      : '',
                     cad_curso           : '',
                     cad_periodo         : '',
-                    cad_num_sala        : '1',
+                    cad_num_sala        : '',
                     cad_bloco           : '',
                     cad_data_hora_inicio: moment().format('YYYY-MM-DD 19:10:00'),
                     cad_data_hora_fim   : moment().format('YYYY-MM-DD 22:00:00'),

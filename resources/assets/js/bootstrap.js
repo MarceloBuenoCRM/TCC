@@ -21,7 +21,7 @@ let showOrHideLoading = function () {
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.baseURL = 'http://localhost/api/';
+window.axios.defaults.baseURL = 'https://listapresenca.shop/api/';
 window.axios.defaults.headers.Authorization = `Bearer ${Cookie.get("token_api")}`;
 
 window.axios.interceptors.request.use((request) => {

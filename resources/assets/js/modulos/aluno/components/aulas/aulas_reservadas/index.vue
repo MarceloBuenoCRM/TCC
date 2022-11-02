@@ -97,6 +97,7 @@
                 duration_tolerancia: null,
                 modal              : false,
                 loading            : false,
+                pausa_tempo        : false,
                 timer              : {
                     minutes: 0,
                     seconds: 0
@@ -255,17 +256,16 @@
                     self.infoA.open(self.map, self.markerA);
                 });
 
-                if(self.verificaArea() == false){
+                if(self.verificaArea() == false && self.pausa_tempo == false){
                     self.pauseMinimo()
+                    self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
+                    self.startTimerTolerancia(self.duration_tolerancia)
+                    self.pausa_tempo = true
+                }else if (self.verificaArea() == true && self.pausa_tempo == true){
+                    self.pauseTolerancia()
+                    self.startTimer(self.duration_minimo)
+                    self.pausa_tempo = false
                 }
-
-                    // self.duration_tolerancia = 60 * self.item.cad_tempo_tolerancia;
-
-                    // self.startTimerTolerancia(self.duration_tolerancia)
-                // }else if (self.verificaArea() == true && self.cron_tolerancia){
-                //     self.pauseTolerancia()
-                //     self.startTimer(self.duration_tolerancia)
-                // }
             },
 
             aguardando(item) {
@@ -313,7 +313,6 @@
                 var duration_minimo = 60 * this.item.cad_tempo_minimo;  // Converter para segundos
                 this.resetCronometro();
                 this.startTimer(duration_minimo); // iniciando o timer
-                this.startTimerTolerancia(duration_minimo)
             },
 
             pauseMinimo() {
