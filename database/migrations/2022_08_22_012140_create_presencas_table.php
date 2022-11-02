@@ -17,6 +17,7 @@ class CreatePresencasTable extends Migration
             $table->id();
             $table->integer('id_aula');
             $table->boolean('presenca')->default(false);
+            $table->integer('id_aluno');
             $table->timestamps();
         });
     }

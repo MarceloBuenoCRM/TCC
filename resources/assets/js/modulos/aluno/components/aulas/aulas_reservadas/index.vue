@@ -22,13 +22,13 @@
                     <div class="container-fluid" style="display: flex">
                         <div class="col-lg-6 col-sm-6" v-for="item in aulas_reservadas" :key="item.id">
                             <div class="small-box"
-                                :class="{'bg-info': aguardando(item), 'bg-success': liberaAula(item), 'bg-danger': !liberaAula(item) && !aguardando(item)}">
+                                :class="{'bg-info': aguardando(item), 'bg-success': liberaAula(item) && item.finalizado == 0, 'bg-danger': (!liberaAula(item) && !aguardando(item)) || item.finalizado == 1}">
                                 <div class="inner">
                                     <h3>{{item.cad_disciplina}}</h3>
                                     <h6 v-if="!liberaAula(item) && aguardando(item)">
                                         <strong>AGUARDANDO</strong>
                                     </h6>
-                                    <h6 v-if="!liberaAula(item) && !aguardando(item)">
+                                    <h6 v-if="(!liberaAula(item) && !aguardando(item)) || item.finalizado == 1">
                                         {{reprova(item)}}
                                         <strong>ENCERRADO</strong>
                                     </h6>
@@ -45,7 +45,7 @@
                                 <div class="icon">
                                     <i class="fas fa-school"></i>
                                 </div>
-                                <a href="#" class="small-box-footer" v-if="liberaAula(item) && trava_presenca == false"
+                                <a href="#" class="small-box-footer" v-if="liberaAula(item) && trava_presenca == false && item.finalizado == 0"
                                     @click="verificaLocalizacao(item)">
                                     Confirmar Presença
                                     <i class="fas fa-arrow-circle-right"></i>
@@ -108,6 +108,7 @@
                 loading: false,
                 pausa_tempo: false,
                 trava_presenca: false,
+                salva_tolerancia: true,
                 timer: {
                     minutes: 0,
                     seconds: 0

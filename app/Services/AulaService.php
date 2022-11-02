@@ -50,6 +50,16 @@ class AulaService
                       ->join('users', 'users.id', 'aulas.id_professor')
                       ->whereBetween('cad_data_hora_inicio', [$initialDate, $lastDate])
                       ->orderBy('cad_data_hora_inicio', 'DESC');
-        return $rows;
+
+        $id_aula = $rows->get()[0]->id;
+        $verifica = DB::table('presencas')->where('id_aula', $id_aula)->where('id_aluno', \Auth::id())->get();
+
+        if(count($verifica) > 0){
+            $verifica = true;
+        }else{
+            $verifica = false;
+        }
+
+        return [$rows, $verifica];
     }
 }

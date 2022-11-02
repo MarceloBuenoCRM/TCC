@@ -82,9 +82,17 @@ class AulaController extends Controller
 
     public function getClassDay()
     {
-        $rows = $this->service->getClassDay()->paginate(10);
+        $data = $this->service->getClassDay();
+        $rows = $data[0]->paginate(10);
+        $verifica = $data[1];
 
         $rows = $this->transformer->transform($rows);
+
+        if($verifica == 1){
+            $rows[0]->finalizado = 1;
+        }else{
+            $rows[0]->finalizado = 0;
+        }
 
         return response()->json([
             'data' => $rows
